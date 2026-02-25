@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.375rem;
+
+    /* MC Dark Theme - Light mode (forced dark) */
+    --background: 0.13 0.008 250;
+    --foreground: 0.92 0.01 250;
+    --card: 0.16 0.008 250;
+    --card-foreground: 0.92 0.01 250;
+    --popover: 0.18 0.008 250;
+    --popover-foreground: 0.92 0.01 250;
+    --primary: 0.78 0.15 85;
+    --primary-foreground: 0.13 0.008 250;
+    --secondary: 0.22 0.01 250;
+    --secondary-foreground: 0.85 0.01 250;
+    --muted: 0.22 0.01 250;
+    --muted-foreground: 0.55 0.01 250;
+    --accent: 0.22 0.01 250;
+    --accent-foreground: 0.92 0.01 250;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.25 0.01 250;
+    --input: 0.20 0.01 250;
+    --ring: 0.78 0.15 85;
+    --chart-1: 0.78 0.15 85;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+    --sidebar: 0.16 0.008 250;
+    --sidebar-foreground: 0.92 0.01 250;
+    --sidebar-primary: 0.78 0.15 85;
+    --sidebar-primary-foreground: 0.13 0.008 250;
+    --sidebar-accent: 0.22 0.01 250;
+    --sidebar-accent-foreground: 0.92 0.01 250;
+    --sidebar-border: 0.25 0.01 250;
+    --sidebar-ring: 0.78 0.15 85;
+  }
+
+  .dark {
+    --background: 0.13 0.008 250;
+    --foreground: 0.92 0.01 250;
+    --card: 0.16 0.008 250;
+    --card-foreground: 0.92 0.01 250;
+    --popover: 0.18 0.008 250;
+    --popover-foreground: 0.92 0.01 250;
+    --primary: 0.78 0.15 85;
+    --primary-foreground: 0.13 0.008 250;
+    --secondary: 0.22 0.01 250;
+    --secondary-foreground: 0.85 0.01 250;
+    --muted: 0.22 0.01 250;
+    --muted-foreground: 0.55 0.01 250;
+    --accent: 0.22 0.01 250;
+    --accent-foreground: 0.92 0.01 250;
+    --destructive: 0.704 0.191 22.216;
+    --destructive-foreground: 0.205 0 0;
+    --border: 0.25 0.01 250;
+    --input: 0.20 0.01 250;
+    --ring: 0.78 0.15 85;
+    --chart-1: 0.78 0.15 85;
+    --chart-2: 0.696 0.17 162.48;
+    --chart-3: 0.769 0.188 70.08;
+    --chart-4: 0.627 0.265 303.9;
+    --chart-5: 0.645 0.246 16.439;
+    --sidebar: 0.16 0.008 250;
+    --sidebar-foreground: 0.92 0.01 250;
+    --sidebar-primary: 0.78 0.15 85;
+    --sidebar-primary-foreground: 0.13 0.008 250;
+    --sidebar-accent: 0.22 0.01 250;
+    --sidebar-accent-foreground: 0.92 0.01 250;
+    --sidebar-border: 0.25 0.01 250;
+    --sidebar-ring: 0.78 0.15 85;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-mc-bg text-mc-text;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .pixelated {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rank-gold {
+    background: linear-gradient(135deg, #92400e 0%, #b45309 50%, #78350f 100%);
+  }
+
+  .rank-silver {
+    background: linear-gradient(135deg, #374151 0%, #4b5563 50%, #374151 100%);
+  }
+
+  .rank-bronze {
+    background: linear-gradient(135deg, #7c2d12 0%, #9a3412 50%, #7c2d12 100%);
+  }
+
+  .text-rank-gold-text {
+    color: #fde68a;
+  }
+
+  .text-rank-silver-text {
+    color: #e5e7eb;
+  }
+
+  .text-rank-bronze-text {
+    color: #fed7aa;
+  }
+}

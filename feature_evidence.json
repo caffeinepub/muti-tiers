@@ -1,0 +1,51 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-rename-the-category-tab-and-all-references-from-ltms-to-spear-mace-throughout-the-frontend-update-the-tab-label-in-categorytabs-tsx-the-categorykey-type-in-frontend-src-data-mockdata-ts-the-tier-badge-input-field-label-in-addplayermodal-tsx-and-any-related-logic-in-rankingspage-tsx-tierbadge-tsx-usequeries-ts-and-any-other-file-that-references-ltms-or-ltms-as-a-key-or-display-string",
+      "featureTitle": "Rename the category tab and all references from 'LTMs' to 'Spear Mace' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'ltms' or 'LTMs' as a key or display string.",
+      "files": [
+        "frontend/src/components/AddPlayerModal.tsx",
+        "frontend/src/components/CategoryTabs.tsx",
+        "frontend/src/components/TierBadge.tsx",
+        "frontend/src/data/mockData.ts",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-12"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-rename-the-category-tab-and-all-references-from-pot-to-diamond-smp-nethop-spear-throughout-the-frontend-update-the-tab-label-in-categorytabs-tsx-the-categorykey-type-in-frontend-src-data-mockdata-ts-the-tier-badge-input-field-label-in-addplayermodal-tsx-and-any-related-logic-in-rankingspage-tsx-tierbadge-tsx-usequeries-ts-and-any-other-file-that-references-pot-or-pot-as-a-key-or-display-string",
+      "featureTitle": "Rename the category tab and all references from 'Pot' to 'Diamond SMP Nethop Spear' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'pot' or 'Pot' as a key or display string.",
+      "files": [
+        "frontend/src/components/AddPlayerModal.tsx",
+        "frontend/src/components/CategoryTabs.tsx",
+        "frontend/src/components/TierBadge.tsx",
+        "frontend/src/data/mockData.ts",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-13"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 11,
+  "summary": "Minecraft PvP rankings app called 'Muti Tiers' — dark-themed, styled like MCTiers. Features all category tabs (Overall, Spear Mace, Vanilla, UHC, Diamond SMP Nethop Spear, NethOP, SMP, Sword, Axe, Mace), player rankings with Minecraft avatars (via crafatar.com), rank numbers, player names, titles/points, region badges, tier icons, and a functional search bar. Rankings list starts empty; players can be added/removed dynamically via a passcode-protected admin UI (passcode: 65515616151, replacing Internet Identity login).",
+  "architectural_notes": [
+    "Use crafatar.com for Minecraft player avatars",
+    "Dark theme matching MCTiers visual style",
+    "Admin UI is protected by a simple passcode (65515616151) instead of Internet Identity login"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-build-the-main-rankings-page-ui-styled-exactly-like-the-mctiers-screenshot-dark-background-0f1117-or-similar-a-top-navigation-bar-branded-muti-tiers-with-a-minecraft-style-pixel-blocky-logo-text-in-gold-yellow-green-nav-links-home-rankings-discords-api-docs-and-a-search-input-on-the-right-below-the-nav-render-10-category-tabs-overall-ltms-vanilla-uhc-pot-nethop-smp-sword-axe-mace-with-distinct-colored-icons-per-tab-the-active-tab-must-be-highlighted-with-a-gold-yellow-bottom-border-and-slightly-lighter-background",
+      "title": "Build the main rankings page UI styled exactly like the MCTiers screenshot: dark background (#0f1117 or similar), a top navigation bar branded 'MUTI TIERS' with a Minecraft-style pixel/blocky logo text in gold/yellow-green, nav links (Home, Rankings, Discords, API Docs), and a search input on the right. Below the nav, render 10 category tabs (Overall, LTMs, Vanilla, UHC, Pot, NethOP, SMP, Sword, Axe, Mace) with distinct colored icons per tab. The active tab must be highlighted with a gold/yellow bottom border and slightly lighter background.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-render-the-player-rankings-table-below-the-category-tabs-each-row-must-display-rank-number-with-colored-background-gold-for-1-bronze-for-2-3-dark-for-others-minecraft-player-avatar-fetched-from-crafatar-com-using-the-player-uuid-player-username-title-and-points-e-g-combat-grandmaster-450-points-region-badge-na-eu-as-colored-pill-and-a-row-of-tier-icon-badges-tier-badges-must-show-a-small-colored-icon-representing-each-game-mode-with-a-tier-label-below-ht1-lt2-etc-rows-must-alternate-subtle-background-shading",
+      "title": "Render the player rankings table below the category tabs. Each row must display: rank number with colored background (gold for #1, bronze for #2-3, dark for others), Minecraft player avatar fetched from crafatar.com using the player UUID, player username, title and points (e.g. 'Combat Grandmaster (450 points)'), region badge (NA/EU/AS colored pill), and a row of tier icon badges. Tier badges must show a small colored icon (representing each game mode) with a tier label below (HT1, LT2, etc.). Rows must alternate subtle background shading.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-functional-search-bar-that-filters-the-currently-displayed-rankings-list-in-real-time-as-the-user-types-matching-against-player-usernames-case-insensitive-clear-the-filter-when-the-search-input-is-emptied",
+      "title": "Implement a functional search bar that filters the currently displayed rankings list in real-time as the user types, matching against player usernames (case-insensitive). Clear the filter when the search input is emptied.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-dark-minecraft-inspired-visual-theme-across-the-entire-app-very-dark-navy-charcoal-background-0d1117-dark-card-surfaces-161b22-muted-borders-gold-yellow-green-accent-color-for-highlights-and-the-logo-pixel-style-or-monospace-font-for-the-logo-and-clean-sans-serif-for-body-text-tier-badge-icons-should-use-distinct-colors-per-game-mode-purple-for-vanilla-pot-green-for-uhc-smp-teal-for-axe-pink-red-for-ltms-etc-the-overall-aesthetic-must-closely-match-the-mctiers-screenshot-provided",
+      "title": "Apply a cohesive dark Minecraft-inspired visual theme across the entire app: very dark navy/charcoal background (#0d1117), dark card surfaces (#161b22), muted borders, gold/yellow-green accent color for highlights and the logo, pixel-style or monospace font for the logo, and clean sans-serif for body text. Tier badge icons should use distinct colors per game mode (purple for Vanilla/Pot, green for UHC/SMP, teal for Axe, pink/red for LTMs, etc.). The overall aesthetic must closely match the MCTiers screenshot provided.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-all-entries-from-the-mock-player-data-array-in-frontend-src-data-mockdata-ts-so-it-exports-an-empty-array-and-ensure-rankingspage-uses-no-hardcoded-player-data-the-rankings-table-must-render-empty-on-first-load",
+      "title": "Remove all entries from the mock player data array in frontend/src/data/mockData.ts so it exports an empty array, and ensure RankingsPage uses no hardcoded player data — the rankings table must render empty on first load.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-internet-identity-login-requirement-on-the-admin-ui-with-a-simple-passcode-gate-when-the-user-attempts-to-add-or-remove-a-player-display-a-passcode-input-prompt-only-if-the-entered-passcode-matches-65515616151-should-the-add-remove-actions-be-permitted-no-internet-identity-login-wallet-or-authentication-flow-should-be-required",
+      "title": "Replace the Internet Identity login requirement on the admin UI with a simple passcode gate. When the user attempts to add or remove a player, display a passcode input prompt. Only if the entered passcode matches `65515616151` should the add/remove actions be permitted. No Internet Identity login, wallet, or authentication flow should be required.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-any-internet-identity-imports-hooks-or-provider-usage-from-the-rankings-page-and-admin-ui-components-the-app-must-not-depend-on-useinternetidentity-for-gating-the-player-management-ui",
+      "title": "Remove any Internet Identity imports, hooks, or provider usage from the rankings page and admin UI components. The app must not depend on `useInternetIdentity` for gating the player management UI.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-add-player-button-visible-on-the-rankings-page-e-g-top-right-area-near-admin-controls-when-clicked-if-the-passcode-has-not-yet-been-entered-this-session-prompt-the-existing-passcodemodal-65515616151-before-opening-the-form-once-unlocked-display-a-dark-themed-modal-form-with-the-following-fields-username-text-uuid-text-region-select-na-eu-as-points-number-title-text-and-tier-badge-inputs-for-each-of-the-10-game-modes-overall-ltms-vanilla-uhc-pot-nethop-smp-sword-axe-mace-where-each-game-mode-tier-field-accepts-a-short-label-such-as-ht1-or-lt2-the-modal-must-follow-the-existing-muti-tiers-dark-aesthetic-0d1117-background-161b22-card-surface-gold-yellow-green-accents-consistent-typography-submitting-the-form-adds-the-player-to-the-rankings-list-and-closes-the-modal-a-cancel-button-discards-changes",
+      "title": "Add an 'Add Player' button visible on the rankings page (e.g. top-right area near admin controls). When clicked, if the passcode has not yet been entered this session, prompt the existing PasscodeModal (65515616151) before opening the form. Once unlocked, display a dark-themed modal form with the following fields: Username (text), UUID (text), Region (select: NA / EU / AS), Points (number), Title (text), and Tier Badge inputs for each of the 10 game modes (Overall, LTMs, Vanilla, UHC, Pot, NethOP, SMP, Sword, Axe, Mace) where each game-mode tier field accepts a short label such as HT1 or LT2. The modal must follow the existing Muti Tiers dark aesthetic (#0d1117 background, #161b22 card surface, gold/yellow-green accents, consistent typography). Submitting the form adds the player to the rankings list and closes the modal; a Cancel button discards changes.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-backend-motoko-actor-to-expose-an-addplayer-update-method-that-accepts-a-player-record-username-uuid-region-points-title-and-a-list-of-tier-badges-per-game-mode-and-persists-it-into-stable-storage-across-all-relevant-category-rankings-the-frontend-s-add-player-form-must-call-this-backend-method-on-submission-so-that-added-players-survive-page-reloads",
+      "title": "Extend the backend Motoko actor to expose an `addPlayer` update method that accepts a player record (username, uuid, region, points, title, and a list of tier badges per game mode) and persists it into stable storage across all relevant category rankings. The frontend's Add Player form must call this backend method on submission so that added players survive page reloads.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-rename-the-category-tab-and-all-references-from-ltms-to-spear-mace-throughout-the-frontend-update-the-tab-label-in-categorytabs-tsx-the-categorykey-type-in-frontend-src-data-mockdata-ts-the-tier-badge-input-field-label-in-addplayermodal-tsx-and-any-related-logic-in-rankingspage-tsx-tierbadge-tsx-usequeries-ts-and-any-other-file-that-references-ltms-or-ltms-as-a-key-or-display-string",
+      "title": "Rename the category tab and all references from 'LTMs' to 'Spear Mace' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'ltms' or 'LTMs' as a key or display string.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-rename-the-category-tab-and-all-references-from-pot-to-diamond-smp-nethop-spear-throughout-the-frontend-update-the-tab-label-in-categorytabs-tsx-the-categorykey-type-in-frontend-src-data-mockdata-ts-the-tier-badge-input-field-label-in-addplayermodal-tsx-and-any-related-logic-in-rankingspage-tsx-tierbadge-tsx-usequeries-ts-and-any-other-file-that-references-pot-or-pot-as-a-key-or-display-string",
+      "title": "Rename the category tab and all references from 'Pot' to 'Diamond SMP Nethop Spear' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'pot' or 'Pot' as a key or display string.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-2",
+      "summary": "Remove all mock player data so the rankings list starts completely empty.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Clear any hardcoded or seeded player data from the backend (backend/main.mo) so the stable storage initializes with empty rankings across all categories.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add 'Add Player' button and modal directly on the rankings page with all fields (username, UUID, region, points, title, tier badges per game mode), passcode-protected, dark-themed.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Rename category tab 'LTMs' to 'Spear Mace' and 'Pot' to 'Diamond SMP Nethop Spear' across all tabs, tier badge inputs, and related logic.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Update the backend Motoko actor in backend/main.mo to rename the stable storage map keys for the 'ltms' category to 'spearMace' and the 'pot' category to 'diamondSmpNethopSpear', ensuring all query and update methods (including addPlayer) reference the new keys. Update migration.mo to carry forward any existing data stored under the old keys into the new keys.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Muti Tiers",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

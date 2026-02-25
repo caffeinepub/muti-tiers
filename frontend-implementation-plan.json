@@ -1,0 +1,91 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Rename LTMs to Spear Mace and Pot to Diamond SMP Nethop Spear",
+  "requirements": [
+    {
+      "id": "REQ-12",
+      "summary": "Rename all frontend references from 'LTMs' to 'Spear Mace' across CategoryTabs, mockData type definitions, AddPlayerModal, and related components",
+      "acceptanceCriteria": [
+        "The category tab previously labeled 'LTMs' now displays as 'Spear Mace'.",
+        "The CategoryKey type (or equivalent string literal union) uses 'spearMace' (or equivalent) instead of 'ltms'.",
+        "The Add Player modal tier badge input for that game mode is labeled 'Spear Mace'.",
+        "No 'LTMs' or 'ltms' label or key remains visible anywhere in the UI or frontend source."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/data/mockData.ts",
+          "operation": "modify",
+          "description": "Update the CategoryKey type definition to replace 'ltms' with 'spearMace'. Change the string literal in the type union from 'ltms' to 'spearMace' and update any references in the MOCK_DATA structure to use the new key name."
+        },
+        {
+          "path": "frontend/src/components/CategoryTabs.tsx",
+          "operation": "modify",
+          "description": "Update the tab label and category key from 'LTMs' to 'Spear Mace'. Change the display text shown in the tab UI and ensure the underlying category value uses 'spearMace' instead of 'ltms' to match the updated type definition."
+        },
+        {
+          "path": "frontend/src/components/AddPlayerModal.tsx",
+          "operation": "modify",
+          "description": "Update the tier badge input field label from 'LTMs' to 'Spear Mace'. Change the label text displayed for the tier selection dropdown corresponding to the spearMace category and ensure the field references use the updated 'spearMace' key."
+        },
+        {
+          "path": "frontend/src/pages/RankingsPage.tsx",
+          "operation": "modify",
+          "description": "Update any category references or filtering logic that uses 'ltms' to use 'spearMace' instead. Ensure category state management and any conditional rendering based on the active category uses the renamed key."
+        },
+        {
+          "path": "frontend/src/components/TierBadge.tsx",
+          "operation": "modify",
+          "description": "Update the category key mapping from 'ltms' to 'spearMace' for badge rendering. Ensure icon selection, color styling, and tier display logic correctly handles the renamed category key."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Update any type annotations, query key references, or data transformation logic that references 'ltms' to use 'spearMace'. Ensure the hook correctly maps backend data using the new category key name."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Rename all frontend references from 'Pot' to 'Diamond SMP Nethop Spear' across CategoryTabs, mockData type definitions, AddPlayerModal, and related components",
+      "acceptanceCriteria": [
+        "The category tab previously labeled 'Pot' now displays as 'Diamond SMP Nethop Spear'.",
+        "The CategoryKey type (or equivalent string literal union) uses 'diamondSmpNethopSpear' (or equivalent) instead of 'pot'.",
+        "The Add Player modal tier badge input for that game mode is labeled 'Diamond SMP Nethop Spear'.",
+        "No 'Pot' or 'pot' label or key remains visible anywhere in the UI or frontend source."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/data/mockData.ts",
+          "operation": "modify",
+          "description": "Update the CategoryKey type definition to replace 'pot' with 'diamondSmpNethopSpear'. Change the string literal in the type union from 'pot' to 'diamondSmpNethopSpear' and update any references in the MOCK_DATA structure to use the new key name."
+        },
+        {
+          "path": "frontend/src/components/CategoryTabs.tsx",
+          "operation": "modify",
+          "description": "Update the tab label and category key from 'Pot' to 'Diamond SMP Nethop Spear'. Change the display text shown in the tab UI and ensure the underlying category value uses 'diamondSmpNethopSpear' instead of 'pot' to match the updated type definition."
+        },
+        {
+          "path": "frontend/src/components/AddPlayerModal.tsx",
+          "operation": "modify",
+          "description": "Update the tier badge input field label from 'Pot' to 'Diamond SMP Nethop Spear'. Change the label text displayed for the tier selection dropdown corresponding to the diamondSmpNethopSpear category and ensure the field references use the updated 'diamondSmpNethopSpear' key."
+        },
+        {
+          "path": "frontend/src/pages/RankingsPage.tsx",
+          "operation": "modify",
+          "description": "Update any category references or filtering logic that uses 'pot' to use 'diamondSmpNethopSpear' instead. Ensure category state management and any conditional rendering based on the active category uses the renamed key."
+        },
+        {
+          "path": "frontend/src/components/TierBadge.tsx",
+          "operation": "modify",
+          "description": "Update the category key mapping from 'pot' to 'diamondSmpNethopSpear' for badge rendering. Ensure icon selection, color styling, and tier display logic correctly handles the renamed category key."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Update any type annotations, query key references, or data transformation logic that references 'pot' to use 'diamondSmpNethopSpear'. Ensure the hook correctly maps backend data using the new category key name."
+        }
+      ]
+    }
+  ]
+}

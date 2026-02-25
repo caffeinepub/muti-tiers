@@ -1,0 +1,79 @@
+{
+  "kind": "build_request",
+  "title": "Rename LTMs to Spear Mace and Pot to Diamond SMP Nethop Spear",
+  "projectName": "Muti Tiers",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-12",
+      "text": "Rename the category tab and all references from 'LTMs' to 'Spear Mace' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'ltms' or 'LTMs' as a key or display string.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "rename ltms to spear mace"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The category tab previously labeled 'LTMs' now displays as 'Spear Mace'.",
+        "The CategoryKey type (or equivalent string literal union) uses 'spearMace' (or equivalent) instead of 'ltms'.",
+        "The Add Player modal tier badge input for that game mode is labeled 'Spear Mace'.",
+        "No 'LTMs' or 'ltms' label or key remains visible anywhere in the UI or frontend source."
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Rename the category tab and all references from 'Pot' to 'Diamond SMP Nethop Spear' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'pot' or 'Pot' as a key or display string.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "rename pot to diamond smp nethop spear"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The category tab previously labeled 'Pot' now displays as 'Diamond SMP Nethop Spear'.",
+        "The CategoryKey type (or equivalent string literal union) uses 'diamondSmpNethopSpear' (or equivalent) instead of 'pot'.",
+        "The Add Player modal tier badge input for that game mode is labeled 'Diamond SMP Nethop Spear'.",
+        "No 'Pot' or 'pot' label or key remains visible anywhere in the UI or frontend source."
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Update the backend Motoko actor in backend/main.mo to rename the stable storage map keys for the 'ltms' category to 'spearMace' and the 'pot' category to 'diamondSmpNethopSpear', ensuring all query and update methods (including addPlayer) reference the new keys. Update migration.mo to carry forward any existing data stored under the old keys into the new keys.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "rename ltms to spear mace",
+          "rename pot to diamond smp nethop spear"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The backend stable storage no longer uses 'ltms' or 'pot' as category keys.",
+        "The new keys 'spearMace' and 'diamondSmpNethopSpear' are used consistently in all backend methods.",
+        "migration.mo maps any existing 'ltms' data to 'spearMace' and any existing 'pot' data to 'diamondSmpNethopSpear'.",
+        "addPlayer and all query methods correctly route data to the renamed categories."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui.",
+    "All other category names (Overall, Vanilla, UHC, NethOP, SMP, Sword, Axe, Mace) must remain unchanged."
+  ],
+  "nonGoals": [
+    "Adding new categories or reordering existing category tabs.",
+    "Changing the visual styling or icons of any category tabs.",
+    "Modifying the passcode, authentication flow, or admin controls."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

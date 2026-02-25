@@ -7,7 +7,8 @@ interface TierBadgeProps {
 
 const CATEGORY_CONFIG: Record<string, { bg: string; border: string; icon: string }> = {
   vanilla: { bg: '#6d28d9', border: '#7c3aed', icon: '⚔️' },
-  diamondSmpNethopSpear: { bg: '#be185d', border: '#db2777', icon: '💎' },
+  diamondSmp: { bg: '#0c4a6e', border: '#0284c7', icon: '💎' },
+  spear: { bg: '#831843', border: '#db2777', icon: '🔱' },
   uhc: { bg: '#065f46', border: '#059669', icon: '🍎' },
   smp: { bg: '#1d4ed8', border: '#2563eb', icon: '🏠' },
   spearMace: { bg: '#9f1239', border: '#e11d48', icon: '🗡️' },

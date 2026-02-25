@@ -110,13 +110,14 @@ export interface RawRankingData {
     axe: Array<PlayerRanking>;
     smp: Array<PlayerRanking>;
     uhc: Array<PlayerRanking>;
-    diamondSmpNethopSpear: Array<PlayerRanking>;
     mace: Array<PlayerRanking>;
     nethop: Array<PlayerRanking>;
+    spear: Array<PlayerRanking>;
     sword: Array<PlayerRanking>;
     vanilla: Array<PlayerRanking>;
     overall: Array<PlayerRanking>;
     spearMace: Array<PlayerRanking>;
+    diamondSmp: Array<PlayerRanking>;
 }
 export enum UserRole {
     admin = "admin",
@@ -125,7 +126,7 @@ export enum UserRole {
 }
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
-    addPlayer(player: PlayerRanking): Promise<void>;
+    addPlayer(rankingCategory: string, player: PlayerRanking): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     getAllPlayers(): Promise<Array<PlayerRanking>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
@@ -133,14 +134,16 @@ export interface backendInterface {
     getMaxRankedPoints(): Promise<bigint>;
     getPlayer(_playerName: string): Promise<PlayerRanking | null>;
     getPlayerRankByRanking(_playerName: string): Promise<PlayerRanking | null>;
+    getPlayersByCategory(categoryKey: string): Promise<Array<PlayerRanking>>;
     getRankingCategories(): Promise<RankingGroup>;
     getRankingCategory(): Promise<RankingGroup>;
     getRankingEntryCount(): Promise<bigint>;
     getRawRankingData(): Promise<RawRankingData>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
+    removePlayer(uuid: string): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    searchPlayersByName(searchTerm: string): Promise<Array<PlayerRanking>>;
+    searchPlayersByName(_searchTerm: string): Promise<Array<PlayerRanking>>;
     switchRankingCategory(category: RankingGroup): Promise<RankingGroup>;
 }
 import type { PlayerRanking as _PlayerRanking, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
@@ -160,17 +163,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async addPlayer(arg0: PlayerRanking): Promise<void> {
+    async addPlayer(arg0: string, arg1: PlayerRanking): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.addPlayer(arg0);
+                const result = await this.actor.addPlayer(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.addPlayer(arg0);
+            const result = await this.actor.addPlayer(arg0, arg1);
             return result;
         }
     }
@@ -272,6 +275,20 @@ export class Backend implements backendInterface {
             return from_candid_opt_n6(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getPlayersByCategory(arg0: string): Promise<Array<PlayerRanking>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getPlayersByCategory(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getPlayersByCategory(arg0);
+            return result;
+        }
+    }
     async getRankingCategories(): Promise<RankingGroup> {
         if (this.processError) {
             try {
@@ -353,6 +370,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.isCallerAdmin();
+            return result;
+        }
+    }
+    async removePlayer(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.removePlayer(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.removePlayer(arg0);
             return result;
         }
     }

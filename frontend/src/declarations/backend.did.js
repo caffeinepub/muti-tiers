@@ -32,18 +32,19 @@ export const RawRankingData = IDL.Record({
   'axe' : IDL.Vec(PlayerRanking),
   'smp' : IDL.Vec(PlayerRanking),
   'uhc' : IDL.Vec(PlayerRanking),
-  'diamondSmpNethopSpear' : IDL.Vec(PlayerRanking),
   'mace' : IDL.Vec(PlayerRanking),
   'nethop' : IDL.Vec(PlayerRanking),
+  'spear' : IDL.Vec(PlayerRanking),
   'sword' : IDL.Vec(PlayerRanking),
   'vanilla' : IDL.Vec(PlayerRanking),
   'overall' : IDL.Vec(PlayerRanking),
   'spearMace' : IDL.Vec(PlayerRanking),
+  'diamondSmp' : IDL.Vec(PlayerRanking),
 });
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
-  'addPlayer' : IDL.Func([PlayerRanking], [], []),
+  'addPlayer' : IDL.Func([IDL.Text, PlayerRanking], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'getAllPlayers' : IDL.Func([], [IDL.Vec(PlayerRanking)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
@@ -53,6 +54,11 @@ export const idlService = IDL.Service({
   'getPlayerRankByRanking' : IDL.Func(
       [IDL.Text],
       [IDL.Opt(PlayerRanking)],
+      ['query'],
+    ),
+  'getPlayersByCategory' : IDL.Func(
+      [IDL.Text],
+      [IDL.Vec(PlayerRanking)],
       ['query'],
     ),
   'getRankingCategories' : IDL.Func([], [RankingGroup], ['query']),
@@ -65,6 +71,7 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'removePlayer' : IDL.Func([IDL.Text], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'searchPlayersByName' : IDL.Func(
       [IDL.Text],
@@ -98,18 +105,19 @@ export const idlFactory = ({ IDL }) => {
     'axe' : IDL.Vec(PlayerRanking),
     'smp' : IDL.Vec(PlayerRanking),
     'uhc' : IDL.Vec(PlayerRanking),
-    'diamondSmpNethopSpear' : IDL.Vec(PlayerRanking),
     'mace' : IDL.Vec(PlayerRanking),
     'nethop' : IDL.Vec(PlayerRanking),
+    'spear' : IDL.Vec(PlayerRanking),
     'sword' : IDL.Vec(PlayerRanking),
     'vanilla' : IDL.Vec(PlayerRanking),
     'overall' : IDL.Vec(PlayerRanking),
     'spearMace' : IDL.Vec(PlayerRanking),
+    'diamondSmp' : IDL.Vec(PlayerRanking),
   });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
-    'addPlayer' : IDL.Func([PlayerRanking], [], []),
+    'addPlayer' : IDL.Func([IDL.Text, PlayerRanking], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'getAllPlayers' : IDL.Func([], [IDL.Vec(PlayerRanking)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
@@ -119,6 +127,11 @@ export const idlFactory = ({ IDL }) => {
     'getPlayerRankByRanking' : IDL.Func(
         [IDL.Text],
         [IDL.Opt(PlayerRanking)],
+        ['query'],
+      ),
+    'getPlayersByCategory' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(PlayerRanking)],
         ['query'],
       ),
     'getRankingCategories' : IDL.Func([], [RankingGroup], ['query']),
@@ -131,6 +144,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'removePlayer' : IDL.Func([IDL.Text], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'searchPlayersByName' : IDL.Func(
         [IDL.Text],

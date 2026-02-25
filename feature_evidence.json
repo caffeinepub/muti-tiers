@@ -2,13 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-rename-the-category-tab-and-all-references-from-ltms-to-spear-mace-throughout-the-frontend-update-the-tab-label-in-categorytabs-tsx-the-categorykey-type-in-frontend-src-data-mockdata-ts-the-tier-badge-input-field-label-in-addplayermodal-tsx-and-any-related-logic-in-rankingspage-tsx-tierbadge-tsx-usequeries-ts-and-any-other-file-that-references-ltms-or-ltms-as-a-key-or-display-string",
-      "featureTitle": "Rename the category tab and all references from 'LTMs' to 'Spear Mace' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'ltms' or 'LTMs' as a key or display string.",
+      "featureId": "feature-add-a-useremoveplayer-mutation-hook-in-frontend-src-hooks-usequeries-ts-that-calls-the-backend-removeplayer-method-with-the-selected-player-s-uuid-and-invalidates-the-relevant-react-query-cache-keys-on-success",
+      "featureTitle": "Add a `useRemovePlayer` mutation hook in frontend/src/hooks/useQueries.ts that calls the backend `removePlayer` method with the selected player's UUID and invalidates the relevant React Query cache keys on success.",
       "files": [
-        "frontend/src/components/AddPlayerModal.tsx",
-        "frontend/src/components/CategoryTabs.tsx",
-        "frontend/src/components/TierBadge.tsx",
-        "frontend/src/data/mockData.ts",
         "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
@@ -20,19 +16,15 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-12"
+        "REQ-22"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-rename-the-category-tab-and-all-references-from-pot-to-diamond-smp-nethop-spear-throughout-the-frontend-update-the-tab-label-in-categorytabs-tsx-the-categorykey-type-in-frontend-src-data-mockdata-ts-the-tier-badge-input-field-label-in-addplayermodal-tsx-and-any-related-logic-in-rankingspage-tsx-tierbadge-tsx-usequeries-ts-and-any-other-file-that-references-pot-or-pot-as-a-key-or-display-string",
-      "featureTitle": "Rename the category tab and all references from 'Pot' to 'Diamond SMP Nethop Spear' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'pot' or 'Pot' as a key or display string.",
+      "featureId": "feature-fix-the-remove-player-flow-in-frontend-src-components-admincontrols-tsx-so-that-1-when-the-remove-player-button-is-clicked-and-the-session-is-unlocked-passcode-already-entered-this-session-via-sessionstorage-the-user-is-prompted-to-select-or-confirm-which-player-to-remove-without-re-showing-the-passcodemodal-2-if-the-session-is-not-yet-unlocked-the-passcodemodal-is-shown-first-3-once-confirmed-the-useremoveplayer-mutation-is-called-with-the-target-player-s-uuid-and-the-player-disappears-from-the-rankings-table-immediately",
+      "featureTitle": "Fix the Remove Player flow in frontend/src/components/AdminControls.tsx so that: (1) when the Remove Player button is clicked and the session is unlocked (passcode already entered this session via sessionStorage), the user is prompted to select or confirm which player to remove without re-showing the PasscodeModal; (2) if the session is not yet unlocked, the PasscodeModal is shown first; (3) once confirmed, the `useRemovePlayer` mutation is called with the target player's UUID and the player disappears from the rankings table immediately.",
       "files": [
-        "frontend/src/components/AddPlayerModal.tsx",
-        "frontend/src/components/CategoryTabs.tsx",
-        "frontend/src/components/TierBadge.tsx",
-        "frontend/src/data/mockData.ts",
-        "frontend/src/hooks/useQueries.ts"
+        "frontend/src/components/AdminControls.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -43,7 +35,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-13"
+        "REQ-23"
       ],
       "confidence": "high"
     }

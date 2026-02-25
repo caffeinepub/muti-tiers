@@ -1,28 +1,41 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-25T04:35:41.991Z",
-  "summary": "All three requirements (REQ-12, REQ-13, REQ-14) appear to be implemented in the diff. Frontend files rename 'LTMs'/'ltms' to 'Spear Mace'/'spearMace' and 'Pot'/'pot' to 'Diamond SMP Nethop Spear'/'diamondSmpNethopSpear' across CategoryTabs.tsx, mockData.ts, AddPlayerModal.tsx, TierBadge.tsx, useQueries.ts. Backend main.mo uses the new keys in RawRankingData and rankingCategories. migration.mo defines OldRawRankingData with 'ltms'/'pot' fields and NewRawRankingData with 'spearMace'/'diamondSmpNethopSpear', though the actual data migration logic in migration.mo's run() function is a no-op (returns old unchanged), which means existing 'ltms'/'pot' data would NOT be migrated to the new keys.",
+  "generatedAt": "2026-02-25T22:26:09.186Z",
+  "summary": "All three requirements appear to be implemented. REQ-21 is addressed in backend/main.mo with a removePlayer method using playerRecords array. REQ-22 is implemented via useRemovePlayer hook in useQueries.ts. REQ-23 is implemented in AdminControls.tsx with sessionStorage-based unlock state and proper flow. However, the backend implementation uses a unified playerRecords array rather than individual per-category stable arrays as specified, and the backend file is truncated so the actual removePlayer method signature and body cannot be fully verified. Additionally, the backend contains authorization imports and MixinAuthorization which may conflict with the no-auth requirement for removePlayer.",
   "missing_requirements": [
     {
-      "id": "REQ-14",
-      "requirement": "migration.mo maps any existing 'ltms' data to 'spearMace' and any existing 'pot' data to 'diamondSmpNethopSpear'.",
-      "reason": "The migration.mo run() function simply returns the old actor state unchanged ('old' passed directly as NewActor), meaning no actual data migration from 'ltms' to 'spearMace' or 'pot' to 'diamondSmpNethopSpear' is performed for existing stored data.",
+      "id": "REQ-21",
+      "requirement": "The method removes the player with the matching UUID from every category stable array (overall, spearMace, vanilla, uhc, diamondSmp, nethop, smp, sword, axe, mace, spear)",
+      "reason": "The backend/main.mo diff is truncated and the actual removePlayer method body is not visible. The storage model was changed from per-category stable arrays to a single playerRecords array, which may or may not correctly handle all 11 category arrays as specified. Cannot confirm the implementation covers all required categories.",
       "evidence": [
-        "backend/migration.mo"
+        "backend/main.mo"
       ]
     }
   ],
-  "hallucinated_features": [],
-  "confidence": 0.82,
+  "hallucinated_features": [
+    {
+      "description": "A migration module (backend/migration.mo) was added to handle data migration from an old actor shape to a new one",
+      "reason": "The build request does not mention any data migration requirement. The added migration.mo file and the migration hook in main.mo were not requested.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Player deduplication by UUID in the Remove Player dialog using a useMemo with a Set",
+      "reason": "The build request does not specify deduplication logic for the player list in the Remove Player dialog. This is an extra feature not requested.",
+      "evidence": [
+        "frontend/src/components/AdminControls.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.72,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/AddPlayerModal.tsx",
-    "frontend/src/components/CategoryTabs.tsx",
-    "frontend/src/components/TierBadge.tsx",
-    "frontend/src/data/mockData.ts",
+    "frontend/src/components/AdminControls.tsx",
     "frontend/src/hooks/useQueries.ts",
     "project_state.json"
   ]

@@ -1,14 +1,18 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
-  "summary": "Minecraft PvP rankings app called 'Muti Tiers' — dark-themed, styled like MCTiers. Features all category tabs (Overall, Spear Mace, Vanilla, UHC, Diamond SMP Nethop Spear, NethOP, SMP, Sword, Axe, Mace), player rankings with Minecraft avatars (via crafatar.com), rank numbers, player names, titles/points, region badges, tier icons, and a functional search bar. Rankings list starts empty; players can be added/removed dynamically via a passcode-protected admin UI (passcode: 65515616151, replacing Internet Identity login).",
+  "projectStateVersion": 21,
+  "summary": "Minecraft PvP rankings app called 'Muti Tiers' — dark-themed, styled like MCTiers. Features all category tabs (Overall, Spear Mace, Vanilla, UHC, Diamond SMP, NethOP, SMP, Sword, Axe, Mace, Spear), player rankings with Minecraft avatars (via crafatar.com), rank numbers, player names, titles/points, region badges, tier icons, and a functional search bar. Rankings list starts empty; players can be added/removed dynamically via a passcode-protected admin UI (passcode: 65515616151, replacing Internet Identity login).",
   "architectural_notes": [
     "Use crafatar.com for Minecraft player avatars",
     "Dark theme matching MCTiers visual style",
     "Admin UI is protected by a simple passcode (65515616151) instead of Internet Identity login"
   ],
-  "known_issues": [],
-  "isFixRequest": false,
+  "known_issues": [
+    "Admin passcode session state not persisting — app shows 'not admin' even after correct passcode entry; unlocked state must be stored in session/component state so it survives re-renders without re-prompting",
+    "Backend addPlayer method has a hardcoded admin-only authorization check that rejects all calls with 'Unauthorized: Only admins can add players', even when the frontend passcode is correct — backend guard must be removed or bypassed",
+    "Remove Player is not working — needs fix for passcode gate integration and backend stable storage removal logic"
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-build-the-main-rankings-page-ui-styled-exactly-like-the-mctiers-screenshot-dark-background-0f1117-or-similar-a-top-navigation-bar-branded-muti-tiers-with-a-minecraft-style-pixel-blocky-logo-text-in-gold-yellow-green-nav-links-home-rankings-discords-api-docs-and-a-search-input-on-the-right-below-the-nav-render-10-category-tabs-overall-ltms-vanilla-uhc-pot-nethop-smp-sword-axe-mace-with-distinct-colored-icons-per-tab-the-active-tab-must-be-highlighted-with-a-gold-yellow-bottom-border-and-slightly-lighter-background",
@@ -97,6 +101,54 @@
         "REQ-13"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-rename-the-diamond-smp-nethop-spear-tab-to-diamond-smp-key-diamondsmp-in-categorytabs-tsx-mockdata-ts-categorykey-type-addplayermodal-tsx-tier-badge-input-label-tierbadge-tsx-usequeries-ts-rankingspage-tsx-and-backend-main-mo-stable-storage-keys-replacing-every-occurrence-of-diamondsmpnethopspear-with-diamondsmp-and-updating-the-display-label-from-diamond-smp-nethop-spear-to-diamond-smp",
+      "title": "Rename the 'Diamond SMP Nethop Spear' tab to 'Diamond SMP' (key: `diamondSmp`) in CategoryTabs.tsx, mockData.ts CategoryKey type, AddPlayerModal.tsx tier badge input label, TierBadge.tsx, useQueries.ts, RankingsPage.tsx, and backend/main.mo stable storage keys — replacing every occurrence of `diamondSmpNethopSpear` with `diamondSmp` and updating the display label from 'Diamond SMP Nethop Spear' to 'Diamond SMP'.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-nethop-spear-as-a-separate-distinct-category-tab-key-nethopspear-alongside-diamond-smp-update-categorytabs-tsx-to-render-the-new-tab-with-an-appropriate-svg-icon-and-colour-add-nethopspear-to-the-categorykey-type-in-mockdata-ts-add-a-nethopspear-tier-badge-input-in-addplayermodal-tsx-handle-the-key-in-tierbadge-tsx-with-a-distinct-colour-add-the-query-mutation-support-in-usequeries-ts-update-rankingspage-tsx-to-include-the-new-category-and-add-a-nethopspear-stable-storage-variable-and-all-relevant-logic-addplayer-getplayersbycategory-etc-to-backend-main-mo",
+      "title": "Add 'Nethop Spear' as a separate, distinct category tab (key: `nethopSpear`) alongside 'Diamond SMP'. Update CategoryTabs.tsx to render the new tab with an appropriate SVG icon and colour, add `nethopSpear` to the CategoryKey type in mockData.ts, add a `nethopSpear` tier badge input in AddPlayerModal.tsx, handle the key in TierBadge.tsx with a distinct colour, add the query/mutation support in useQueries.ts, update RankingsPage.tsx to include the new category, and add a `nethopSpear` stable storage variable and all relevant logic (addPlayer, getPlayersByCategory, etc.) to backend/main.mo.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-rename-the-nethop-spear-category-tab-to-spear-display-label-with-key-spear-across-all-frontend-files-update-the-tab-label-and-key-in-categorytabs-tsx-replacing-nethopspear-with-spear-update-the-categorykey-union-type-in-frontend-src-data-mockdata-ts-replacing-nethopspear-with-spear-update-the-tier-badge-input-field-label-in-addplayermodal-tsx-handle-the-new-key-spear-in-tierbadge-tsx-keeping-the-same-distinct-colour-previously-used-for-nethopspear-update-query-mutation-support-in-usequeries-ts-and-update-rankingspage-tsx-replacing-every-occurrence-of-nethopspear-with-spear-and-every-display-string-nethop-spear-nethop-spear-with-spear",
+      "title": "Rename the 'Nethop Spear' category tab to 'Spear' (display label) with key `spear` across all frontend files: update the tab label and key in CategoryTabs.tsx (replacing `nethopSpear` with `spear`), update the CategoryKey union type in frontend/src/data/mockData.ts (replacing `nethopSpear` with `spear`), update the tier badge input field label in AddPlayerModal.tsx, handle the new key `spear` in TierBadge.tsx (keeping the same distinct colour previously used for `nethopSpear`), update query/mutation support in useQueries.ts, and update RankingsPage.tsx — replacing every occurrence of `nethopSpear` with `spear` and every display string 'Nethop Spear' / 'NethOP Spear' with 'Spear'.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-admin-passcode-unlock-state-in-admincontrols-tsx-so-that-once-the-user-successfully-enters-passcode-65515616151-the-isunlocked-boolean-is-stored-in-component-state-or-sessionstorage-and-persists-across-re-renders-and-navigations-within-the-same-session-after-a-successful-passcode-entry-the-add-player-and-remove-player-actions-must-proceed-immediately-without-re-prompting-the-passcodemodal-or-blocking-with-a-not-admin-message-the-unlocked-state-should-only-reset-when-the-page-is-fully-refreshed-or-the-browser-tab-is-closed",
+      "title": "Fix the admin passcode unlock state in AdminControls.tsx so that once the user successfully enters passcode `65515616151`, the `isUnlocked` boolean is stored in component state (or sessionStorage) and persists across re-renders and navigations within the same session. After a successful passcode entry, the 'Add Player' and 'Remove Player' actions must proceed immediately without re-prompting the PasscodeModal or blocking with a 'not admin' message. The unlocked state should only reset when the page is fully refreshed or the browser tab is closed.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-useremoveplayer-mutation-hook-in-frontend-src-hooks-usequeries-ts-that-calls-the-backend-removeplayer-method-with-the-selected-player-s-uuid-and-invalidates-the-relevant-react-query-cache-keys-on-success",
+      "title": "Add a `useRemovePlayer` mutation hook in frontend/src/hooks/useQueries.ts that calls the backend `removePlayer` method with the selected player's UUID and invalidates the relevant React Query cache keys on success.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-remove-player-flow-in-frontend-src-components-admincontrols-tsx-so-that-1-when-the-remove-player-button-is-clicked-and-the-session-is-unlocked-passcode-already-entered-this-session-via-sessionstorage-the-user-is-prompted-to-select-or-confirm-which-player-to-remove-without-re-showing-the-passcodemodal-2-if-the-session-is-not-yet-unlocked-the-passcodemodal-is-shown-first-3-once-confirmed-the-useremoveplayer-mutation-is-called-with-the-target-player-s-uuid-and-the-player-disappears-from-the-rankings-table-immediately",
+      "title": "Fix the Remove Player flow in frontend/src/components/AdminControls.tsx so that: (1) when the Remove Player button is clicked and the session is unlocked (passcode already entered this session via sessionStorage), the user is prompted to select or confirm which player to remove without re-showing the PasscodeModal; (2) if the session is not yet unlocked, the PasscodeModal is shown first; (3) once confirmed, the `useRemovePlayer` mutation is called with the target player's UUID and the player disappears from the rankings table immediately.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -127,10 +179,58 @@
       "status": "pending"
     },
     {
-      "id": "AR-10",
-      "summary": "Update the backend Motoko actor in backend/main.mo to rename the stable storage map keys for the 'ltms' category to 'spearMace' and the 'pot' category to 'diamondSmpNethopSpear', ensuring all query and update methods (including addPlayer) reference the new keys. Update migration.mo to carry forward any existing data stored under the old keys into the new keys.",
+      "id": "AR-11",
+      "summary": "Rename 'Diamond SMP Nethop Spear' tab to 'Diamond SMP' (key: diamondSmp) and split out 'Nethop Spear' (key: nethopSpear) as a separate tab, updating all frontend components (CategoryTabs, AddPlayerModal, RankingsPage, TierBadge, useQueries, mockData types) and backend Motoko actor stable storage keys and methods.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Generate and apply a migration in backend/migration.mo that migrates any existing stable state from the old `diamondSmpNethopSpear` key to the new `diamondSmp` key, initialising the new `nethopSpear` stable array as empty, so that no previously added player data is lost after the upgrade.",
       "reqIds": [
-        "REQ-14"
+        "REQ-16"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Rename 'NethOP Spear' / 'nethopSpear' to 'Spear' (key: `spear`) across all frontend components (CategoryTabs.tsx, mockData.ts CategoryKey type, AddPlayerModal.tsx, TierBadge.tsx, useQueries.ts, RankingsPage.tsx) and backend/main.mo stable storage keys and methods.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Rename the `nethopSpear` stable storage variable and all related logic in backend/main.mo to `spear`. This includes: the stable array declaration, the `addPlayer` method's tier badge mapping, the `getPlayersByCategory` switch/case for `nethopSpear` → `spear`, and any other reference to `nethopSpear` as a key or string in the actor. The display label passed from the frontend will also be 'Spear'.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Remove or bypass the backend admin authorization check in addPlayer (backend/main.mo) so that calls from the frontend succeed without a backend-level admin guard — the passcode gate remains on the frontend only.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Remove the hardcoded admin authorization check from the `addPlayer` update method in backend/main.mo. The method must no longer check caller identity or admin status before persisting a player record — it should accept and store any valid call. The passcode gate remains exclusively on the frontend in AdminControls.tsx and PasscodeModal.tsx; no backend-level access control should block the operation.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Fix the Remove Player functionality so it works correctly with the passcode gate and properly removes players from the backend stable storage.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Add a `removePlayer` update method to the backend Motoko actor in backend/main.mo that accepts a player UUID (Text) and removes the matching player record from all category stable storage arrays. The method must not perform any caller identity or admin authorization check — it must accept and process any valid call.",
+      "reqIds": [
+        "REQ-21"
       ],
       "status": "pending"
     }

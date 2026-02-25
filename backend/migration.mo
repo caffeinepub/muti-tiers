@@ -1,8 +1,9 @@
+import Array "mo:core/Array";
 import Map "mo:core/Map";
-import Principal "mo:core/Principal";
+import Text "mo:core/Text";
 
 module {
-  public type PlayerRanking = {
+  type PlayerRanking = {
     username : Text;
     uuid : Text;
     rankPosition : Nat;
@@ -12,54 +13,45 @@ module {
     badges : [TierCategory];
   };
 
-  public type TierCategory = {
+  type TierCategory = {
     category : Text;
     tier : Text;
   };
 
-  public type UserProfile = {
-    name : Text;
-  };
-
-  public type OldRawRankingData = {
-    overall : [PlayerRanking];
-    ltms : [PlayerRanking];
-    vanilla : [PlayerRanking];
-    uhc : [PlayerRanking];
-    pot : [PlayerRanking];
-    nethop : [PlayerRanking];
-    smp : [PlayerRanking];
-    sword : [PlayerRanking];
-    axe : [PlayerRanking];
-    mace : [PlayerRanking];
-  };
-
-  public type NewRawRankingData = {
-    overall : [PlayerRanking];
-    spearMace : [PlayerRanking];
-    vanilla : [PlayerRanking];
-    uhc : [PlayerRanking];
-    diamondSmpNethopSpear : [PlayerRanking];
-    nethop : [PlayerRanking];
-    smp : [PlayerRanking];
-    sword : [PlayerRanking];
-    axe : [PlayerRanking];
-    mace : [PlayerRanking];
-  };
-
   public type OldActor = {
-    var activeRankingCategory : Text;
+    diamondSmp : [PlayerRanking];
+    spear : [PlayerRanking];
     players : Map.Map<Text, PlayerRanking>;
-    userProfiles : Map.Map<Principal, UserProfile>;
+    rankingCategories : [Text];
+    activeRankingCategory : Text;
   };
 
   public type NewActor = {
-    var activeRankingCategory : Text;
-    players : Map.Map<Text, PlayerRanking>;
-    userProfiles : Map.Map<Principal, UserProfile>;
+    playerRecords : [(Text, PlayerRanking)];
+    rankingCategories : [Text];
+    activeRankingCategory : Text;
   };
 
   public func run(old : OldActor) : NewActor {
-    old;
+    let diamondSmpRecords = Array.tabulate(
+      old.diamondSmp.size(),
+      func(i) { ("diamondSmp", old.diamondSmp[i]) },
+    );
+
+    let spearRecords = Array.tabulate(
+      old.spear.size(),
+      func(i) { ("spear", old.spear[i]) },
+    );
+
+    let playerMapArray = old.players.toArray();
+    let playerMapRecords = playerMapArray.map(
+      func((uuid, player)) { (player.title, player) }
+    );
+
+    {
+      playerRecords = diamondSmpRecords.concat(spearRecords).concat(playerMapRecords);
+      rankingCategories = old.rankingCategories;
+      activeRankingCategory = old.activeRankingCategory;
+    };
   };
 };

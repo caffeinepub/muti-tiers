@@ -47,12 +47,21 @@ function UHCIcon() {
   );
 }
 
-function DiamondSmpNethopSpearIcon() {
+function DiamondSmpIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
-      <ellipse cx="12" cy="16" rx="7" ry="5" fill="#f472b6" />
-      <rect x="9" y="7" width="6" height="9" rx="2" fill="#f472b6" />
-      <rect x="11" y="3" width="2" height="5" rx="1" fill="#fbbf24" />
+      <polygon points="12,3 20,9 17,19 7,19 4,9" fill="#38bdf8" opacity="0.85" />
+      <polygon points="12,3 20,9 12,7 4,9" fill="#7dd3fc" />
+    </svg>
+  );
+}
+
+function SpearIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
+      <line x1="5" y1="19" x2="17" y2="5" stroke="#f472b6" strokeWidth="2" strokeLinecap="round" />
+      <polygon points="17,5 13,7 15,11" fill="#f472b6" />
+      <circle cx="5.5" cy="18.5" r="2" fill="#f472b6" />
     </svg>
   );
 }
@@ -107,7 +116,8 @@ const TABS: Tab[] = [
   { key: 'spearMace', label: 'Spear Mace', icon: <SpearMaceIcon /> },
   { key: 'vanilla', label: 'Vanilla', icon: <VanillaIcon /> },
   { key: 'uhc', label: 'UHC', icon: <UHCIcon /> },
-  { key: 'diamondSmpNethopSpear', label: 'Diamond SMP Nethop Spear', icon: <DiamondSmpNethopSpearIcon /> },
+  { key: 'diamondSmp', label: 'Diamond SMP', icon: <DiamondSmpIcon /> },
+  { key: 'spear', label: 'Spear', icon: <SpearIcon /> },
   { key: 'nethop', label: 'NethOP', icon: <NethOPIcon /> },
   { key: 'smp', label: 'SMP', icon: <SMPIcon /> },
   { key: 'sword', label: 'Sword', icon: <SwordIcon /> },

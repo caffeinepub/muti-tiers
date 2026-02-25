@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-25T04:35:41.995Z",
+  "generatedAt": "2026-02-25T22:26:09.190Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -11,51 +11,33 @@
     "implemented": 2,
     "items": [
       {
-        "id": "REQ-12",
-        "summary": "Rename the category tab and all references from 'LTMs' to 'Spear Mace' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'ltms' or 'LTMs' as a key or display string.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/data/mockData.ts",
-          "frontend/src/components/CategoryTabs.tsx",
-          "frontend/src/components/AddPlayerModal.tsx",
-          "frontend/src/pages/RankingsPage.tsx",
-          "frontend/src/components/TierBadge.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/data/mockData.ts",
-          "frontend/src/components/CategoryTabs.tsx",
-          "frontend/src/components/AddPlayerModal.tsx",
-          "frontend/src/components/TierBadge.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ]
-      },
-      {
-        "id": "REQ-13",
-        "summary": "Rename the category tab and all references from 'Pot' to 'Diamond SMP Nethop Spear' throughout the frontend: update the tab label in CategoryTabs.tsx, the CategoryKey type in frontend/src/data/mockData.ts, the tier badge input field label in AddPlayerModal.tsx, and any related logic in RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other file that references 'pot' or 'Pot' as a key or display string.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/data/mockData.ts",
-          "frontend/src/components/CategoryTabs.tsx",
-          "frontend/src/components/AddPlayerModal.tsx",
-          "frontend/src/pages/RankingsPage.tsx",
-          "frontend/src/components/TierBadge.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/data/mockData.ts",
-          "frontend/src/components/CategoryTabs.tsx",
-          "frontend/src/components/AddPlayerModal.tsx",
-          "frontend/src/components/TierBadge.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ]
-      },
-      {
-        "id": "REQ-14",
-        "summary": "Update the backend Motoko actor in backend/main.mo to rename the stable storage map keys for the 'ltms' category to 'spearMace' and the 'pot' category to 'diamondSmpNethopSpear', ensuring all query and update methods (including addPlayer) reference the new keys. Update migration.mo to carry forward any existing data stored under the old keys into the new keys.",
+        "id": "REQ-21",
+        "summary": "Add a `removePlayer` update method to the backend Motoko actor in backend/main.mo that accepts a player UUID (Text) and removes the matching player record from all category stable storage arrays. The method must not perform any caller identity or admin authorization check — it must accept and process any valid call.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
+      },
+      {
+        "id": "REQ-22",
+        "summary": "Add a `useRemovePlayer` mutation hook in frontend/src/hooks/useQueries.ts that calls the backend `removePlayer` method with the selected player's UUID and invalidates the relevant React Query cache keys on success.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useQueries.ts"
+        ]
+      },
+      {
+        "id": "REQ-23",
+        "summary": "Fix the Remove Player flow in frontend/src/components/AdminControls.tsx so that: (1) when the Remove Player button is clicked and the session is unlocked (passcode already entered this session via sessionStorage), the user is prompted to select or confirm which player to remove without re-showing the PasscodeModal; (2) if the session is not yet unlocked, the PasscodeModal is shown first; (3) once confirmed, the `useRemovePlayer` mutation is called with the target player's UUID and the player disappears from the rankings table immediately.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AdminControls.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AdminControls.tsx"
+        ]
       }
     ]
   },
@@ -68,10 +50,7 @@
     "frontend-implementation-plan.json",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/AddPlayerModal.tsx",
-    "frontend/src/components/CategoryTabs.tsx",
-    "frontend/src/components/TierBadge.tsx",
-    "frontend/src/data/mockData.ts",
+    "frontend/src/components/AdminControls.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
     "frontend/src/hooks/useQueries.ts",

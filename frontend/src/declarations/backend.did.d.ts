@@ -24,13 +24,14 @@ export interface RawRankingData {
   'axe' : Array<PlayerRanking>,
   'smp' : Array<PlayerRanking>,
   'uhc' : Array<PlayerRanking>,
-  'diamondSmpNethopSpear' : Array<PlayerRanking>,
   'mace' : Array<PlayerRanking>,
   'nethop' : Array<PlayerRanking>,
+  'spear' : Array<PlayerRanking>,
   'sword' : Array<PlayerRanking>,
   'vanilla' : Array<PlayerRanking>,
   'overall' : Array<PlayerRanking>,
   'spearMace' : Array<PlayerRanking>,
+  'diamondSmp' : Array<PlayerRanking>,
 }
 export interface TierCategory { 'tier' : string, 'category' : string }
 export interface UserProfile { 'name' : string }
@@ -39,7 +40,7 @@ export type UserRole = { 'admin' : null } |
   { 'guest' : null };
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
-  'addPlayer' : ActorMethod<[PlayerRanking], undefined>,
+  'addPlayer' : ActorMethod<[string, PlayerRanking], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'getAllPlayers' : ActorMethod<[], Array<PlayerRanking>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
@@ -47,12 +48,14 @@ export interface _SERVICE {
   'getMaxRankedPoints' : ActorMethod<[], bigint>,
   'getPlayer' : ActorMethod<[string], [] | [PlayerRanking]>,
   'getPlayerRankByRanking' : ActorMethod<[string], [] | [PlayerRanking]>,
+  'getPlayersByCategory' : ActorMethod<[string], Array<PlayerRanking>>,
   'getRankingCategories' : ActorMethod<[], RankingGroup>,
   'getRankingCategory' : ActorMethod<[], RankingGroup>,
   'getRankingEntryCount' : ActorMethod<[], bigint>,
   'getRawRankingData' : ActorMethod<[], RawRankingData>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'removePlayer' : ActorMethod<[string], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'searchPlayersByName' : ActorMethod<[string], Array<PlayerRanking>>,
   'switchRankingCategory' : ActorMethod<[RankingGroup], RankingGroup>,

@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Rename two existing categories throughout the application: "LTMs" → "Spear Mace" and "Pot" → "Diamond SMP Nethop Spear".
+**Goal:** Fix the Remove Player functionality so that players can be successfully removed from the rankings by an admin.
 
 **Planned changes:**
-- Update the category tab label, CategoryKey type, and all references from `ltms`/`LTMs` to `spearMace`/`Spear Mace` in the frontend (CategoryTabs.tsx, mockData.ts, AddPlayerModal.tsx, RankingsPage.tsx, TierBadge.tsx, useQueries.ts, and any other affected files).
-- Update the category tab label, CategoryKey type, and all references from `pot`/`Pot` to `diamondSmpNethopSpear`/`Diamond SMP Nethop Spear` in the frontend (same files as above).
-- Rename backend stable storage keys in `main.mo` from `ltms` to `spearMace` and from `pot` to `diamondSmpNethopSpear`, updating all query and update methods accordingly.
-- Update `migration.mo` to migrate any existing data stored under the old keys (`ltms`, `pot`) to the new keys (`spearMace`, `diamondSmpNethopSpear`).
+- Add a `removePlayer(uuid: Text)` update method to the backend Motoko actor (`backend/main.mo`) that removes the matching player from all category stable storage arrays with no authorization checks
+- Add a `useRemovePlayer` mutation hook in `frontend/src/hooks/useQueries.ts` that calls the backend `removePlayer` method and invalidates relevant React Query cache keys on success
+- Fix the Remove Player flow in `frontend/src/components/AdminControls.tsx` to skip the PasscodeModal when the session is already unlocked (via sessionStorage), show it when not yet unlocked, and call the `useRemovePlayer` mutation with the target player's UUID upon confirmation
 
-**User-visible outcome:** The category tabs previously labeled "LTMs" and "Pot" now display as "Spear Mace" and "Diamond SMP Nethop Spear" respectively, with all related UI labels, inputs, and backend storage consistently using the new names.
+**User-visible outcome:** Admins can remove a player from the rankings table; if already authenticated this session the PasscodeModal is not shown again, and the player disappears from the table immediately after removal.

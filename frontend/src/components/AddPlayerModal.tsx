@@ -31,7 +31,8 @@ const GAME_MODES = [
   { key: 'spearMace', label: 'Spear Mace' },
   { key: 'vanilla', label: 'Vanilla' },
   { key: 'uhc', label: 'UHC' },
-  { key: 'diamondSmpNethopSpear', label: 'Diamond SMP Nethop Spear' },
+  { key: 'diamondSmp', label: 'Diamond SMP' },
+  { key: 'spear', label: 'Spear' },
   { key: 'nethop', label: 'NethOP' },
   { key: 'smp', label: 'SMP' },
   { key: 'sword', label: 'Sword' },
@@ -250,7 +251,7 @@ export default function AddPlayerModal({ open, onOpenChange }: AddPlayerModalPro
               <div className="h-px flex-1 bg-mc-border" />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {GAME_MODES.map((mode) => (
                 <div key={mode.key} className="space-y-1.5">
                   <Label
@@ -295,15 +296,15 @@ export default function AddPlayerModal({ open, onOpenChange }: AddPlayerModalPro
             </div>
           </div>
 
-          {/* Error Message */}
+          {/* Error */}
           {error && (
-            <div className="flex items-center gap-2 text-red-400 text-xs bg-red-500/10 border border-red-500/30 rounded px-3 py-2">
+            <div className="flex items-center gap-2 text-red-400 text-xs bg-red-950/30 border border-red-800/50 rounded px-3 py-2">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-              {error}
+              <span>{error}</span>
             </div>
           )}
 
-          <DialogFooter className="gap-2 sm:gap-2 pt-1">
+          <DialogFooter className="pt-2">
             <Button
               type="button"
               variant="ghost"
@@ -316,16 +317,16 @@ export default function AddPlayerModal({ open, onOpenChange }: AddPlayerModalPro
             <Button
               type="submit"
               disabled={addPlayerMutation.isPending}
-              className="bg-mc-gold text-mc-bg hover:bg-mc-gold/80 font-bold gap-2"
+              className="bg-mc-gold text-mc-bg hover:bg-mc-gold/90 font-bold"
             >
               {addPlayerMutation.isPending ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Adding...
+                  <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
+                  Adding…
                 </>
               ) : (
                 <>
-                  <UserPlus className="w-3.5 h-3.5" />
+                  <UserPlus className="w-3.5 h-3.5 mr-2" />
                   Add Player
                 </>
               )}

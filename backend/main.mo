@@ -1,10 +1,11 @@
-import Iter "mo:core/Iter";
-import Text "mo:core/Text";
-import Order "mo:core/Order";
 import Array "mo:core/Array";
+import Iter "mo:core/Iter";
 import Map "mo:core/Map";
-import Runtime "mo:core/Runtime";
+import Nat "mo:core/Nat";
+import Order "mo:core/Order";
 import Principal "mo:core/Principal";
+import Runtime "mo:core/Runtime";
+import Text "mo:core/Text";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import Migration "migration";
@@ -12,6 +13,8 @@ import Migration "migration";
 (with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
+
+  // Add const authorization checks to prevent modifications
   include MixinAuthorization(accessControlState);
 
   module TierCategory {
@@ -61,7 +64,8 @@ actor {
     spearMace : [PlayerRanking];
     vanilla : [PlayerRanking];
     uhc : [PlayerRanking];
-    diamondSmpNethopSpear : [PlayerRanking];
+    diamondSmp : [PlayerRanking];
+    spear : [PlayerRanking];
     nethop : [PlayerRanking];
     smp : [PlayerRanking];
     sword : [PlayerRanking];
@@ -75,12 +79,16 @@ actor {
     name : Text;
   };
 
+  // Store all categories in a single array for easy removal.
+  var playerRecords : [(Text, PlayerRanking)] = [];
+  var activeRankingCategory = "overall";
   let rankingCategories = [
     "overall",
     "spearMace",
     "vanilla",
     "uhc",
-    "diamondSmpNethopSpear",
+    "diamondSmp",
+    "spear",
     "nethop",
     "smp",
     "sword",
@@ -88,13 +96,8 @@ actor {
     "mace",
   ];
 
-  var activeRankingCategory = rankingCategories[0];
-
-  let players = Map.empty<Text, PlayerRanking>();
-
+  // Initialize an empty Map for user profiles after migration.
   let userProfiles = Map.empty<Principal, UserProfile>();
-
-  // User profile management
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
@@ -117,7 +120,6 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // Admin-only: switch the active ranking category
   public shared ({ caller }) func switchRankingCategory(category : RankingGroup) : async RankingGroup {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can switch ranking categories");
@@ -131,33 +133,52 @@ actor {
     activeRankingCategory;
   };
 
-  // Admin-only: add a player to the rankings
-  public shared ({ caller }) func addPlayer(player : PlayerRanking) : async () {
+  public shared ({ caller }) func addPlayer(rankingCategory : Text, player : PlayerRanking) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can add players");
     };
-    players.add(player.uuid, player);
+    playerRecords := playerRecords.concat([(rankingCategory, player)]);
+  };
+
+  // Removes a player from all category entries by player UUID.
+  public shared ({ caller }) func removePlayer(uuid : Text) : async () {
+    playerRecords := playerRecords.filter(
+      func(entry) { entry.1.uuid != uuid }
+    );
+  };
+
+  public query ({ caller }) func getPlayersByCategory(categoryKey : Text) : async [PlayerRanking] {
+    playerRecords
+      .filter(func(record) { record.0 == categoryKey })
+      .map(func(record) { record.1 });
   };
 
   public query ({ caller }) func getRawRankingData() : async RawRankingData {
     let emptyData = Array.empty<PlayerRanking>();
 
     {
-      overall = emptyData;
+      overall = getPlayersByCategoryForRaw("overall");
       spearMace = emptyData;
-      vanilla = emptyData;
-      uhc = emptyData;
-      diamondSmpNethopSpear = emptyData;
-      nethop = emptyData;
-      smp = emptyData;
-      sword = emptyData;
-      axe = emptyData;
-      mace = emptyData;
+      vanilla = getPlayersByCategoryForRaw("vanilla");
+      uhc = getPlayersByCategoryForRaw("uhc");
+      diamondSmp = getPlayersByCategoryForRaw("diamondSmp");
+      spear = getPlayersByCategoryForRaw("spear");
+      nethop = getPlayersByCategoryForRaw("nethop");
+      smp = getPlayersByCategoryForRaw("smp");
+      sword = getPlayersByCategoryForRaw("sword");
+      axe = getPlayersByCategoryForRaw("axe");
+      mace = getPlayersByCategoryForRaw("mace");
     };
   };
 
-  public query ({ caller }) func searchPlayersByName(searchTerm : Text) : async [PlayerRanking] {
-    players.values().toArray();
+  func getPlayersByCategoryForRaw(categoryKey : Text) : [PlayerRanking] {
+    playerRecords
+      .filter(func(record) { record.0 == categoryKey })
+      .map(func(record) { record.1 });
+  };
+
+  public query ({ caller }) func searchPlayersByName(_searchTerm : Text) : async [PlayerRanking] {
+    [];
   };
 
   public query ({ caller }) func getMaxRankedPoints() : async Nat {
@@ -165,17 +186,15 @@ actor {
   };
 
   public query ({ caller }) func getPlayerRankByRanking(_playerName : Text) : async ?PlayerRanking {
-    let entries = players.toArray();
-    if (entries.size() > 0) { ?(entries[0]).1 } else { null };
+    if (playerRecords.size() > 0) { ?playerRecords[0].1 } else { null };
   };
 
   public query ({ caller }) func getAllPlayers() : async [PlayerRanking] {
-    players.values().toArray();
+    playerRecords.map(func(record) { record.1 });
   };
 
   public query ({ caller }) func getPlayer(_playerName : Text) : async ?PlayerRanking {
-    let playerEntries = players.toArray();
-    if (playerEntries.size() > 0) { ?(playerEntries[0]).1 } else { null };
+    if (playerRecords.size() > 0) { ?playerRecords[0].1 } else { null };
   };
 
   public query ({ caller }) func getRankingCategory() : async RankingGroup {

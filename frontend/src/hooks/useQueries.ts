@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { RawRankingData, PlayerRanking } from '../backend';
+import type { PlayerRanking, RawRankingData } from '../backend';
+import type { CategoryKey } from '../data/mockData';
 
 export function useRawRankingData() {
   const { actor, isFetching } = useActor();
@@ -14,7 +15,8 @@ export function useRawRankingData() {
           spearMace: [],
           vanilla: [],
           uhc: [],
-          diamondSmpNethopSpear: [],
+          diamondSmp: [],
+          spear: [],
           nethop: [],
           smp: [],
           sword: [],
@@ -34,10 +36,10 @@ export function useSearchPlayers(searchTerm: string) {
   return useQuery<PlayerRanking[]>({
     queryKey: ['searchPlayers', searchTerm],
     queryFn: async () => {
-      if (!actor || !searchTerm) return [];
+      if (!actor || !searchTerm.trim()) return [];
       return actor.searchPlayersByName(searchTerm);
     },
-    enabled: !!actor && !isFetching && searchTerm.length > 0,
+    enabled: !!actor && !isFetching && searchTerm.trim().length > 0,
   });
 }
 
@@ -54,6 +56,19 @@ export function useGetAllPlayers() {
   });
 }
 
+export function useGetPlayersByCategory(categoryKey: CategoryKey) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<PlayerRanking[]>({
+    queryKey: ['playersByCategory', categoryKey],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getPlayersByCategory(categoryKey);
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
 export function useAddPlayer() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
@@ -61,11 +76,48 @@ export function useAddPlayer() {
   return useMutation({
     mutationFn: async (player: PlayerRanking) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.addPlayer(player);
+
+      const categoryKeys: CategoryKey[] = [
+        'overall', 'spearMace', 'vanilla', 'uhc', 'diamondSmp', 'spear',
+        'nethop', 'smp', 'sword', 'axe', 'mace',
+      ];
+
+      // Find which categories this player has badges for
+      const badgeCategories = player.badges
+        .map((b) => b.category)
+        .filter((c) => categoryKeys.includes(c as CategoryKey));
+
+      if (badgeCategories.length > 0) {
+        // Add player to each category they have a badge for
+        for (const cat of badgeCategories) {
+          await actor.addPlayer(cat, player);
+        }
+      } else {
+        // Default to overall if no badges
+        await actor.addPlayer('overall', player);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['allPlayers'] });
       queryClient.invalidateQueries({ queryKey: ['rawRankingData'] });
+      queryClient.invalidateQueries({ queryKey: ['playersByCategory'] });
+    },
+  });
+}
+
+export function useRemovePlayer() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (uuid: string) => {
+      if (!actor) throw new Error('Actor not available');
+      await actor.removePlayer(uuid);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allPlayers'] });
+      queryClient.invalidateQueries({ queryKey: ['rawRankingData'] });
+      queryClient.invalidateQueries({ queryKey: ['playersByCategory'] });
     },
   });
 }

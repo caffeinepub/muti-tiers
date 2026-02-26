@@ -1,11 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the Remove Player functionality so that players can be successfully removed from the rankings by an admin.
+**Goal:** Fix the Add Player and Remove Player flows end-to-end, and allow individual tier badge fields to be cleared/left empty when adding a player.
 
 **Planned changes:**
-- Add a `removePlayer(uuid: Text)` update method to the backend Motoko actor (`backend/main.mo`) that removes the matching player from all category stable storage arrays with no authorization checks
-- Add a `useRemovePlayer` mutation hook in `frontend/src/hooks/useQueries.ts` that calls the backend `removePlayer` method and invalidates relevant React Query cache keys on success
-- Fix the Remove Player flow in `frontend/src/components/AdminControls.tsx` to skip the PasscodeModal when the session is already unlocked (via sessionStorage), show it when not yet unlocked, and call the `useRemovePlayer` mutation with the target player's UUID upon confirmation
+- Make all 11 tier badge fields in `AddPlayerModal.tsx` optional and clearable; submit only non-empty tier values to the backend.
+- Update the backend `addPlayer` method to skip storing tier badge entries with empty or whitespace-only labels.
+- Audit and fix the full Add Player flow: correct argument shape in `useAddPlayer`, modal closes on success, inline error display, and React Query cache invalidation so the rankings table refreshes immediately.
+- Audit and fix the full Remove Player flow: `removePlayer` backend method removes the player by UUID from all categories without authorization checks; `useRemovePlayer` calls it with the correct argument and invalidates cache.
+- Fix `AdminControls.tsx` so that when the session is already unlocked, clicking Remove Player skips the PasscodeModal and goes directly to player selection/confirmation; if not unlocked, shows PasscodeModal first.
 
-**User-visible outcome:** Admins can remove a player from the rankings table; if already authenticated this session the PasscodeModal is not shown again, and the player disappears from the table immediately after removal.
+**User-visible outcome:** Admins can add players with only some tier badges filled in (leaving others blank), and both Add Player and Remove Player actions work correctly — persisting/removing data on the backend and immediately refreshing the rankings table without a page reload.

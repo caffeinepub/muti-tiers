@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 21,
+  "projectStateVersion": 25,
   "summary": "Minecraft PvP rankings app called 'Muti Tiers' — dark-themed, styled like MCTiers. Features all category tabs (Overall, Spear Mace, Vanilla, UHC, Diamond SMP, NethOP, SMP, Sword, Axe, Mace, Spear), player rankings with Minecraft avatars (via crafatar.com), rank numbers, player names, titles/points, region badges, tier icons, and a functional search bar. Rankings list starts empty; players can be added/removed dynamically via a passcode-protected admin UI (passcode: 65515616151, replacing Internet Identity login).",
   "architectural_notes": [
     "Use crafatar.com for Minecraft player avatars",
@@ -10,7 +10,8 @@
   "known_issues": [
     "Admin passcode session state not persisting — app shows 'not admin' even after correct passcode entry; unlocked state must be stored in session/component state so it survives re-renders without re-prompting",
     "Backend addPlayer method has a hardcoded admin-only authorization check that rejects all calls with 'Unauthorized: Only admins can add players', even when the frontend passcode is correct — backend guard must be removed or bypassed",
-    "Remove Player is not working — needs fix for passcode gate integration and backend stable storage removal logic"
+    "Remove Player is not working — needs fix for passcode gate integration and backend stable storage removal logic",
+    "Add Player and Remove Player flows are still not working as of version 11 — needs further debugging"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -149,6 +150,38 @@
         "REQ-23"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-audit-and-fix-the-useaddplayer-mutation-hook-in-frontend-src-hooks-usequeries-ts-to-ensure-it-correctly-calls-the-backend-addplayer-method-with-the-full-player-payload-username-uuid-region-points-title-and-per-category-tier-badges-and-invalidates-the-relevant-react-query-cache-keys-on-success-so-that-the-rankings-table-refreshes-immediately-after-a-player-is-added",
+      "title": "Audit and fix the `useAddPlayer` mutation hook in frontend/src/hooks/useQueries.ts to ensure it correctly calls the backend `addPlayer` method with the full player payload (username, uuid, region, points, title, and per-category tier badges) and invalidates the relevant React Query cache keys on success so that the rankings table refreshes immediately after a player is added.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-fix-the-add-player-form-submission-handler-in-frontend-src-components-addplayermodal-tsx-to-ensure-1-all-required-fields-username-uuid-region-points-title-tier-badges-are-correctly-serialised-into-the-shape-expected-by-the-backend-addplayer-method-2-the-modal-closes-after-a-successful-submission-3-any-backend-error-is-surfaced-to-the-user-inline-rather-than-silently-failing",
+      "title": "Audit and fix the Add Player form submission handler in frontend/src/components/AddPlayerModal.tsx to ensure: (1) all required fields (username, uuid, region, points, title, tier badges) are correctly serialised into the shape expected by the backend `addPlayer` method; (2) the modal closes after a successful submission; (3) any backend error is surfaced to the user inline rather than silently failing.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-perform-a-thorough-end-to-end-audit-and-fix-of-the-add-player-flow-1-confirm-the-backend-addplayer-method-in-backend-main-mo-has-no-admin-authorization-guard-and-accepts-any-valid-call-unconditionally-2-confirm-useaddplayer-in-usequeries-ts-constructs-the-correct-argument-shape-including-only-non-empty-tier-badges-and-calls-the-backend-actor-method-3-confirm-addplayermodal-tsx-serialises-the-form-state-into-the-exact-shape-the-backend-expects-and-closes-the-modal-on-success-4-confirm-react-query-cache-is-invalidated-for-all-relevant-category-keys-after-a-successful-add-so-the-rankings-table-refreshes-immediately",
+      "title": "Perform a thorough end-to-end audit and fix of the Add Player flow: (1) Confirm the backend addPlayer method in backend/main.mo has no admin authorization guard and accepts any valid call unconditionally. (2) Confirm useAddPlayer in useQueries.ts constructs the correct argument shape (including only non-empty tier badges) and calls the backend actor method. (3) Confirm AddPlayerModal.tsx serialises the form state into the exact shape the backend expects and closes the modal on success. (4) Confirm React Query cache is invalidated for all relevant category keys after a successful add so the rankings table refreshes immediately.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-perform-a-thorough-end-to-end-audit-and-fix-of-the-remove-player-flow-1-confirm-the-backend-removeplayer-method-in-backend-main-mo-removes-the-player-matching-the-given-uuid-from-all-category-stable-storage-arrays-without-any-authorization-check-2-confirm-useremoveplayer-in-usequeries-ts-calls-the-backend-removeplayer-method-with-the-correct-uuid-argument-and-invalidates-all-relevant-react-query-cache-keys-on-success-3-confirm-admincontrols-tsx-when-session-is-already-unlocked-sessionstorage-flag-set-the-remove-player-button-immediately-shows-a-player-selection-confirmation-step-without-re-prompting-the-passcodemodal-if-not-unlocked-shows-passcodemodal-first-4-after-confirmation-the-player-disappears-from-the-rankings-table-immediately",
+      "title": "Perform a thorough end-to-end audit and fix of the Remove Player flow: (1) Confirm the backend removePlayer method in backend/main.mo removes the player matching the given UUID from all category stable storage arrays without any authorization check. (2) Confirm useRemovePlayer in useQueries.ts calls the backend removePlayer method with the correct UUID argument and invalidates all relevant React Query cache keys on success. (3) Confirm AdminControls.tsx: when session is already unlocked (sessionStorage flag set), the Remove Player button immediately shows a player-selection/confirmation step without re-prompting the PasscodeModal; if not unlocked, shows PasscodeModal first. (4) After confirmation, the player disappears from the rankings table immediately.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -231,6 +264,36 @@
       "summary": "Add a `removePlayer` update method to the backend Motoko actor in backend/main.mo that accepts a player UUID (Text) and removes the matching player record from all category stable storage arrays. The method must not perform any caller identity or admin authorization check — it must accept and process any valid call.",
       "reqIds": [
         "REQ-21"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Remove the admin authorization guard from the `addPlayer` update method in backend/main.mo. The method must not check caller identity or admin status before persisting a player record — it must accept and store any valid call unconditionally. The passcode gate remains exclusively on the frontend.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Allow removing one or more tier badges from a player (in the add/edit player form or player management UI) so that tier fields can be left blank or cleared individually.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "In AddPlayerModal.tsx, make every per-category tier badge input field optional and clearable: each of the 11 tier fields (Overall, Spear Mace, Vanilla, UHC, Diamond SMP, NethOP, SMP, Sword, Axe, Mace, Spear) must accept an empty string as valid input, and the form must submit successfully even when one or more tier fields are left blank or cleared. Do not require all tier fields to be filled.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Update the backend addPlayer method in backend/main.mo to treat tier badge entries with empty labels as absent — skip storing any tier badge record where the tier label is an empty string or whitespace. This ensures partial tier badge submissions from the frontend are stored correctly without empty badge artifacts.",
+      "reqIds": [
+        "REQ-28"
       ],
       "status": "pending"
     }

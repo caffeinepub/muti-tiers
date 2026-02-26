@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -20,10 +20,12 @@ import {
 import { UserPlus, Loader2, AlertCircle } from 'lucide-react';
 import { useAddPlayer } from '../hooks/useQueries';
 import type { PlayerRanking } from '../backend';
+import type { CategoryKey } from '../data/mockData';
 
 interface AddPlayerModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  defaultCategory?: CategoryKey;
 }
 
 const GAME_MODES = [
@@ -55,28 +57,36 @@ const TIER_COLORS: Record<string, string> = {
   LT5: '#ec4899',
 };
 
-const emptyForm = {
+const makeEmptyForm = (defaultCategory: CategoryKey = 'overall') => ({
   username: '',
   uuid: '',
   region: 'NA',
   points: '',
   title: '',
+  category: defaultCategory as string,
   tiers: Object.fromEntries(GAME_MODES.map((m) => [m.key, ''])) as Record<string, string>,
-};
+});
 
-export default function AddPlayerModal({ open, onOpenChange }: AddPlayerModalProps) {
-  const [form, setForm] = useState(emptyForm);
+export default function AddPlayerModal({ open, onOpenChange, defaultCategory = 'overall' }: AddPlayerModalProps) {
+  const [form, setForm] = useState(() => makeEmptyForm(defaultCategory));
   const [error, setError] = useState<string | null>(null);
   const addPlayerMutation = useAddPlayer();
 
+  // Update category when defaultCategory changes and modal opens
+  useEffect(() => {
+    if (open) {
+      setForm((prev) => ({ ...prev, category: defaultCategory }));
+    }
+  }, [open, defaultCategory]);
+
   const handleClose = () => {
     if (addPlayerMutation.isPending) return;
-    setForm(emptyForm);
+    setForm(makeEmptyForm(defaultCategory));
     setError(null);
     onOpenChange(false);
   };
 
-  const handleFieldChange = (field: keyof typeof emptyForm, value: string) => {
+  const handleFieldChange = (field: keyof ReturnType<typeof makeEmptyForm>, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setError(null);
   };
@@ -105,6 +115,10 @@ export default function AddPlayerModal({ open, onOpenChange }: AddPlayerModalPro
       setError('Region is required.');
       return;
     }
+    if (!form.category) {
+      setError('Category is required.');
+      return;
+    }
 
     const pointsNum = parseInt(form.points, 10);
     if (form.points !== '' && isNaN(pointsNum)) {
@@ -127,8 +141,8 @@ export default function AddPlayerModal({ open, onOpenChange }: AddPlayerModalPro
     };
 
     try {
-      await addPlayerMutation.mutateAsync(player);
-      setForm(emptyForm);
+      await addPlayerMutation.mutateAsync({ category: form.category, player });
+      setForm(makeEmptyForm(defaultCategory));
       setError(null);
       onOpenChange(false);
     } catch (err: unknown) {
@@ -188,6 +202,31 @@ export default function AddPlayerModal({ open, onOpenChange }: AddPlayerModalPro
             </div>
 
             <div className="space-y-1.5">
+              <Label htmlFor="ap-category" className="text-mc-muted text-xs uppercase tracking-wider">
+                Category <span className="text-red-400">*</span>
+              </Label>
+              <Select value={form.category} onValueChange={(v) => handleFieldChange('category', v)}>
+                <SelectTrigger
+                  id="ap-category"
+                  className="bg-mc-bg border-mc-border text-mc-text focus:ring-mc-gold"
+                >
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent className="bg-mc-card border-mc-border text-mc-text">
+                  {GAME_MODES.map((mode) => (
+                    <SelectItem
+                      key={mode.key}
+                      value={mode.key}
+                      className="focus:bg-mc-hover focus:text-mc-text"
+                    >
+                      {mode.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
               <Label htmlFor="ap-region" className="text-mc-muted text-xs uppercase tracking-wider">
                 Region <span className="text-red-400">*</span>
               </Label>
@@ -223,7 +262,7 @@ export default function AddPlayerModal({ open, onOpenChange }: AddPlayerModalPro
               />
             </div>
 
-            <div className="space-y-1.5 sm:col-span-2">
+            <div className="space-y-1.5">
               <Label htmlFor="ap-title" className="text-mc-muted text-xs uppercase tracking-wider">
                 Title
               </Label>

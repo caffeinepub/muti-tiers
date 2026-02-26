@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { UserPlus, UserMinus, ShieldCheck, Loader2, Trash2 } from 'lucide-react';
 import { useGetAllPlayers, useRemovePlayer } from '../hooks/useQueries';
+import type { CategoryKey } from '../data/mockData';
 
 const ADMIN_SESSION_KEY = 'muti_admin_unlocked';
 
@@ -35,7 +36,11 @@ function setSessionUnlocked(value: boolean): void {
   }
 }
 
-export default function AdminControls() {
+interface AdminControlsProps {
+  activeCategory?: CategoryKey;
+}
+
+export default function AdminControls({ activeCategory = 'overall' }: AdminControlsProps) {
   const [isUnlocked, setIsUnlocked] = useState<boolean>(() => getSessionUnlocked());
   const [passcodeModalOpen, setPasscodeModalOpen] = useState(false);
   const [addPlayerModalOpen, setAddPlayerModalOpen] = useState(false);
@@ -148,6 +153,7 @@ export default function AdminControls() {
       <AddPlayerModal
         open={addPlayerModalOpen}
         onOpenChange={setAddPlayerModalOpen}
+        defaultCategory={activeCategory}
       />
 
       {/* Remove Player Modal */}

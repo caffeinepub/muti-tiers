@@ -1,42 +1,55 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-25T22:26:09.190Z",
+  "generatedAt": "2026-02-25T23:57:00.787Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
+    "total": 4,
     "implemented": 2,
     "items": [
       {
-        "id": "REQ-21",
-        "summary": "Add a `removePlayer` update method to the backend Motoko actor in backend/main.mo that accepts a player UUID (Text) and removes the matching player record from all category stable storage arrays. The method must not perform any caller identity or admin authorization check — it must accept and process any valid call.",
+        "id": "REQ-27",
+        "summary": "In AddPlayerModal.tsx, make every per-category tier badge input field optional and clearable: each of the 11 tier fields (Overall, Spear Mace, Vanilla, UHC, Diamond SMP, NethOP, SMP, Sword, Axe, Mace, Spear) must accept an empty string as valid input, and the form must submit successfully even when one or more tier fields are left blank or cleared. Do not require all tier fields to be filled.",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/components/AddPlayerModal.tsx"
+        ],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-28",
+        "summary": "Update the backend addPlayer method in backend/main.mo to treat tier badge entries with empty labels as absent — skip storing any tier badge record where the tier label is an empty string or whitespace. This ensures partial tier badge submissions from the frontend are stored correctly without empty badge artifacts.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-22",
-        "summary": "Add a `useRemovePlayer` mutation hook in frontend/src/hooks/useQueries.ts that calls the backend `removePlayer` method with the selected player's UUID and invalidates the relevant React Query cache keys on success.",
+        "id": "REQ-29",
+        "summary": "Perform a thorough end-to-end audit and fix of the Add Player flow: (1) Confirm the backend addPlayer method in backend/main.mo has no admin authorization guard and accepts any valid call unconditionally. (2) Confirm useAddPlayer in useQueries.ts constructs the correct argument shape (including only non-empty tier badges) and calls the backend actor method. (3) Confirm AddPlayerModal.tsx serialises the form state into the exact shape the backend expects and closes the modal on success. (4) Confirm React Query cache is invalidated for all relevant category keys after a successful add so the rankings table refreshes immediately.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/AddPlayerModal.tsx",
+          "frontend/src/pages/RankingsPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/RankingsPage.tsx"
         ]
       },
       {
-        "id": "REQ-23",
-        "summary": "Fix the Remove Player flow in frontend/src/components/AdminControls.tsx so that: (1) when the Remove Player button is clicked and the session is unlocked (passcode already entered this session via sessionStorage), the user is prompted to select or confirm which player to remove without re-showing the PasscodeModal; (2) if the session is not yet unlocked, the PasscodeModal is shown first; (3) once confirmed, the `useRemovePlayer` mutation is called with the target player's UUID and the player disappears from the rankings table immediately.",
+        "id": "REQ-30",
+        "summary": "Perform a thorough end-to-end audit and fix of the Remove Player flow: (1) Confirm the backend removePlayer method in backend/main.mo removes the player matching the given UUID from all category stable storage arrays without any authorization check. (2) Confirm useRemovePlayer in useQueries.ts calls the backend removePlayer method with the correct UUID argument and invalidates all relevant React Query cache keys on success. (3) Confirm AdminControls.tsx: when session is already unlocked (sessionStorage flag set), the Remove Player button immediately shows a player-selection/confirmation step without re-prompting the PasscodeModal; if not unlocked, shows PasscodeModal first. (4) After confirmation, the player disappears from the rankings table immediately.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/AdminControls.tsx"
+          "frontend/src/components/AdminControls.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/AdminControls.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ]
       }
     ]
@@ -48,12 +61,8 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/AdminControls.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
     "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/RankingsPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

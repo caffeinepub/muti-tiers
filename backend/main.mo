@@ -14,7 +14,6 @@ import Migration "migration";
 actor {
   let accessControlState = AccessControl.initState();
 
-  // Add const authorization checks to prevent modifications
   include MixinAuthorization(accessControlState);
 
   module TierCategory {
@@ -96,7 +95,6 @@ actor {
     "mace",
   ];
 
-  // Initialize an empty Map for user profiles after migration.
   let userProfiles = Map.empty<Principal, UserProfile>();
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -133,11 +131,15 @@ actor {
     activeRankingCategory;
   };
 
+  // addPlayer is intentionally open to any caller.
   public shared ({ caller }) func addPlayer(rankingCategory : Text, player : PlayerRanking) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can add players");
-    };
-    playerRecords := playerRecords.concat([(rankingCategory, player)]);
+    let filteredBadges = player.badges.filter(
+      func(category) {
+        category.tier.trim(#char(' ')) != "";
+      }
+    );
+    let updatedPlayer = { player with badges = filteredBadges };
+    playerRecords := playerRecords.concat([(rankingCategory, updatedPlayer)]);
   };
 
   // Removes a player from all category entries by player UUID.

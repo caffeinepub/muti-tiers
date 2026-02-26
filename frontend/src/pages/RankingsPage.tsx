@@ -4,34 +4,19 @@ import RankingsTable from '../components/RankingsTable';
 import SearchInput from '../components/SearchInput';
 import AdminControls from '../components/AdminControls';
 import type { CategoryKey } from '../data/mockData';
-import { useGetAllPlayers, useGetPlayersByCategory } from '../hooks/useQueries';
+import { useGetPlayersByCategory } from '../hooks/useQueries';
 import type { PlayerRanking } from '../backend';
 
 export default function RankingsPage() {
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('overall');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { data: allPlayers = [], isLoading: allPlayersLoading } = useGetAllPlayers();
-  const { data: categoryPlayers = [], isLoading: categoryLoading } = useGetPlayersByCategory(activeCategory);
-
-  const isSpecialCategory = activeCategory === 'diamondSmp' || activeCategory === 'spear';
+  const { data: categoryPlayers = [], isLoading } = useGetPlayersByCategory(activeCategory);
 
   const players = useMemo(() => {
-    const source: PlayerRanking[] = isSpecialCategory ? categoryPlayers : allPlayers;
-
-    const filtered = isSpecialCategory
-      ? source
-      : source.filter((p) => {
-          if (activeCategory === 'overall') return true;
-          return p.badges.some((b) => b.category === activeCategory);
-        });
-
-    const sorted = [...filtered].sort((a, b) => Number(b.points) - Number(a.points));
-
+    const sorted = [...categoryPlayers].sort((a, b) => Number(b.points) - Number(a.points));
     return sorted.map((p, i) => ({ ...p, rankPosition: BigInt(i + 1) }));
-  }, [allPlayers, categoryPlayers, activeCategory, isSpecialCategory]);
-
-  const isLoading = isSpecialCategory ? categoryLoading : allPlayersLoading;
+  }, [categoryPlayers]);
 
   return (
     <div className="min-h-screen bg-mc-bg text-mc-text flex flex-col">
@@ -46,7 +31,7 @@ export default function RankingsPage() {
         </div>
         <div className="flex items-center gap-3">
           <SearchInput value={searchQuery} onChange={setSearchQuery} />
-          <AdminControls />
+          <AdminControls activeCategory={activeCategory} />
         </div>
       </header>
 

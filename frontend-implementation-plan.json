@@ -1,38 +1,73 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix Remove Player functionality",
+  "title": "Fix Add/Remove Player flows and allow clearing individual tier badges",
   "requirements": [
     {
-      "id": "REQ-22",
-      "summary": "Add useRemovePlayer mutation hook that calls backend removePlayer method and invalidates ranking cache",
+      "id": "REQ-27",
+      "summary": "Make all 11 per-category tier badge input fields in AddPlayerModal optional and clearable, allowing form submission with empty tier fields",
       "acceptanceCriteria": [
-        "A `useRemovePlayer` hook is exported from useQueries.ts",
-        "The hook calls the backend actor's `removePlayer` method with the target player UUID",
-        "On success, the query cache for all category rankings is invalidated so the table re-fetches and reflects the removal"
+        "Each tier badge input field in AddPlayerModal can be individually cleared (set to empty string).",
+        "The form submits without error when one or more tier fields are empty.",
+        "Only non-empty tier badge values are included in the payload sent to the backend addPlayer method.",
+        "Tier badges that were left empty do not appear in the player's row in the rankings table."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AddPlayerModal.tsx",
+          "operation": "modify",
+          "description": "Update the tier badge input fields to accept empty strings as valid values. Remove any required validation on tier fields. Update form submission logic to filter out tier badges with empty labels before constructing the PlayerRanking payload for the backend. Ensure each of the 11 tier fields (Overall, Spear Mace, Vanilla, UHC, Diamond SMP, NethOP, SMP, Sword, Axe, Mace, Spear) can be cleared individually and the form validates successfully when some or all are empty."
+        }
+      ]
+    },
+    {
+      "id": "REQ-29",
+      "summary": "Perform end-to-end audit and fix of the Add Player flow, ensuring correct payload construction, backend method invocation, error handling, and cache invalidation",
+      "acceptanceCriteria": [
+        "Submitting the Add Player form with valid data persists the player to the backend and the player appears in the rankings table without a page reload.",
+        "No 'Unauthorized' or other backend error is returned when addPlayer is called from the frontend.",
+        "The modal closes automatically after a successful submission.",
+        "Backend errors are displayed inline in the modal rather than failing silently.",
+        "The rankings table for the relevant category refreshes immediately after the player is added."
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add a `useRemovePlayer` mutation hook that accepts a UUID string, calls actor.removePlayer(uuid), and on success invalidates the query cache keys ['rawRankingData', 'allPlayers', 'searchPlayers', and any 'playersByCategory'] to trigger a refetch of ranking data across all views"
+          "description": "Review and fix the useAddPlayer mutation hook. Ensure it constructs the PlayerRanking argument with the correct shape expected by the backend (including only non-empty tier badges). Verify the mutation calls actor.addPlayer with the category and player arguments in the correct order. Ensure onSuccess invalidates React Query cache for 'allPlayers', 'playersByCategory', and the specific category key to trigger an immediate table refresh."
+        },
+        {
+          "path": "frontend/src/components/AddPlayerModal.tsx",
+          "operation": "modify",
+          "description": "Audit form submission handler to ensure it serializes the form state into the exact PlayerRanking shape the backend expects (username, uuid, region, points as bigint, title, rankPosition as bigint, badges array with only non-empty tier entries). Display backend errors inline using error state from the useAddPlayer mutation. Close the modal automatically on successful submission by resetting form state and calling onClose."
+        },
+        {
+          "path": "frontend/src/pages/RankingsPage.tsx",
+          "operation": "modify",
+          "description": "Verify that the RankingsPage uses the correct React Query keys for fetching players by category, and that these keys match those invalidated by useAddPlayer. Ensure the table re-renders immediately when the cache is invalidated after a successful player addition."
         }
       ]
     },
     {
-      "id": "REQ-23",
-      "summary": "Fix Remove Player flow in AdminControls to skip passcode re-prompt when session is unlocked and trigger player removal",
+      "id": "REQ-30",
+      "summary": "Perform end-to-end audit and fix of the Remove Player flow, ensuring correct session unlock checks, player selection/confirmation UI, backend method invocation, and cache invalidation",
       "acceptanceCriteria": [
-        "Clicking Remove Player when already unlocked does not re-prompt the PasscodeModal",
-        "Clicking Remove Player when not yet unlocked shows the PasscodeModal first, then proceeds after correct passcode entry",
-        "The selected player is removed from the rankings table after the mutation completes",
-        "The unlocked state is read from sessionStorage (key consistent with AdminControls existing implementation) so it persists across re-renders within the same session"
+        "Clicking Remove Player when the session is unlocked shows a player selection or confirmation UI without showing the PasscodeModal again.",
+        "Clicking Remove Player when the session is NOT unlocked shows the PasscodeModal first, then proceeds to the remove confirmation after correct passcode entry.",
+        "After confirming removal, the selected player is deleted from the backend stable storage across all categories.",
+        "The rankings table refreshes immediately after removal without a page reload.",
+        "No authorization error is returned from the backend removePlayer method."
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/AdminControls.tsx",
           "operation": "modify",
-          "description": "Modify the Remove Player button click handler to: (1) check sessionStorage for the unlocked state key (matching the existing Add Player implementation); (2) if unlocked, immediately show a player selection/confirmation UI (e.g., a select dropdown or modal listing current players with their usernames and UUIDs) without re-prompting PasscodeModal; (3) if not unlocked, show PasscodeModal first, then proceed to player selection after successful passcode entry; (4) wire the useRemovePlayer mutation from useQueries.ts and call it with the selected player UUID; (5) ensure the mutation callback updates UI state so the player is removed from the visible table after success"
+          "description": "Fix the Remove Player button flow. Check sessionStorage for the unlock flag ('adminUnlocked'). If unlocked, skip PasscodeModal and immediately show a player selection/confirmation dialog. If not unlocked, show PasscodeModal first, then proceed to player selection after successful passcode entry. After the user selects and confirms a player for removal, call useRemovePlayer with the player's UUID. Ensure the session unlock state persists across re-renders but resets on tab close/page refresh."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Review and fix the useRemovePlayer mutation hook. Ensure it calls actor.removePlayer with the correct UUID argument (string type matching backend signature). Verify onSuccess invalidates all relevant React Query cache keys ('allPlayers', 'playersByCategory', and all individual category keys) to trigger an immediate table refresh after removal."
         }
       ]
     }

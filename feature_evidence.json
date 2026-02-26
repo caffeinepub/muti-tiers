@@ -2,8 +2,28 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-useremoveplayer-mutation-hook-in-frontend-src-hooks-usequeries-ts-that-calls-the-backend-removeplayer-method-with-the-selected-player-s-uuid-and-invalidates-the-relevant-react-query-cache-keys-on-success",
-      "featureTitle": "Add a `useRemovePlayer` mutation hook in frontend/src/hooks/useQueries.ts that calls the backend `removePlayer` method with the selected player's UUID and invalidates the relevant React Query cache keys on success.",
+      "featureId": "feature-perform-a-thorough-end-to-end-audit-and-fix-of-the-add-player-flow-1-confirm-the-backend-addplayer-method-in-backend-main-mo-has-no-admin-authorization-guard-and-accepts-any-valid-call-unconditionally-2-confirm-useaddplayer-in-usequeries-ts-constructs-the-correct-argument-shape-including-only-non-empty-tier-badges-and-calls-the-backend-actor-method-3-confirm-addplayermodal-tsx-serialises-the-form-state-into-the-exact-shape-the-backend-expects-and-closes-the-modal-on-success-4-confirm-react-query-cache-is-invalidated-for-all-relevant-category-keys-after-a-successful-add-so-the-rankings-table-refreshes-immediately",
+      "featureTitle": "Perform a thorough end-to-end audit and fix of the Add Player flow: (1) Confirm the backend addPlayer method in backend/main.mo has no admin authorization guard and accepts any valid call unconditionally. (2) Confirm useAddPlayer in useQueries.ts constructs the correct argument shape (including only non-empty tier badges) and calls the backend actor method. (3) Confirm AddPlayerModal.tsx serialises the form state into the exact shape the backend expects and closes the modal on success. (4) Confirm React Query cache is invalidated for all relevant category keys after a successful add so the rankings table refreshes immediately.",
+      "files": [
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/RankingsPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-29"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-perform-a-thorough-end-to-end-audit-and-fix-of-the-remove-player-flow-1-confirm-the-backend-removeplayer-method-in-backend-main-mo-removes-the-player-matching-the-given-uuid-from-all-category-stable-storage-arrays-without-any-authorization-check-2-confirm-useremoveplayer-in-usequeries-ts-calls-the-backend-removeplayer-method-with-the-correct-uuid-argument-and-invalidates-all-relevant-react-query-cache-keys-on-success-3-confirm-admincontrols-tsx-when-session-is-already-unlocked-sessionstorage-flag-set-the-remove-player-button-immediately-shows-a-player-selection-confirmation-step-without-re-prompting-the-passcodemodal-if-not-unlocked-shows-passcodemodal-first-4-after-confirmation-the-player-disappears-from-the-rankings-table-immediately",
+      "featureTitle": "Perform a thorough end-to-end audit and fix of the Remove Player flow: (1) Confirm the backend removePlayer method in backend/main.mo removes the player matching the given UUID from all category stable storage arrays without any authorization check. (2) Confirm useRemovePlayer in useQueries.ts calls the backend removePlayer method with the correct UUID argument and invalidates all relevant React Query cache keys on success. (3) Confirm AdminControls.tsx: when session is already unlocked (sessionStorage flag set), the Remove Player button immediately shows a player-selection/confirmation step without re-prompting the PasscodeModal; if not unlocked, shows PasscodeModal first. (4) After confirmation, the player disappears from the rankings table immediately.",
       "files": [
         "frontend/src/hooks/useQueries.ts"
       ],
@@ -16,26 +36,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-22"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-fix-the-remove-player-flow-in-frontend-src-components-admincontrols-tsx-so-that-1-when-the-remove-player-button-is-clicked-and-the-session-is-unlocked-passcode-already-entered-this-session-via-sessionstorage-the-user-is-prompted-to-select-or-confirm-which-player-to-remove-without-re-showing-the-passcodemodal-2-if-the-session-is-not-yet-unlocked-the-passcodemodal-is-shown-first-3-once-confirmed-the-useremoveplayer-mutation-is-called-with-the-target-player-s-uuid-and-the-player-disappears-from-the-rankings-table-immediately",
-      "featureTitle": "Fix the Remove Player flow in frontend/src/components/AdminControls.tsx so that: (1) when the Remove Player button is clicked and the session is unlocked (passcode already entered this session via sessionStorage), the user is prompted to select or confirm which player to remove without re-showing the PasscodeModal; (2) if the session is not yet unlocked, the PasscodeModal is shown first; (3) once confirmed, the `useRemovePlayer` mutation is called with the target player's UUID and the player disappears from the rankings table immediately.",
-      "files": [
-        "frontend/src/components/AdminControls.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-23"
+        "REQ-30"
       ],
       "confidence": "high"
     }

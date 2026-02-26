@@ -3,6 +3,20 @@ import { useActor } from './useActor';
 import type { PlayerRanking, RawRankingData } from '../backend';
 import type { CategoryKey } from '../data/mockData';
 
+const ALL_CATEGORY_KEYS: CategoryKey[] = [
+  'overall',
+  'spearMace',
+  'vanilla',
+  'uhc',
+  'diamondSmp',
+  'spear',
+  'nethop',
+  'smp',
+  'sword',
+  'axe',
+  'mace',
+];
+
 export function useRawRankingData() {
   const { actor, isFetching } = useActor();
 
@@ -69,38 +83,26 @@ export function useGetPlayersByCategory(categoryKey: CategoryKey) {
   });
 }
 
+export interface AddPlayerPayload {
+  category: string;
+  player: PlayerRanking;
+}
+
 export function useAddPlayer() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (player: PlayerRanking) => {
+    mutationFn: async ({ category, player }: AddPlayerPayload) => {
       if (!actor) throw new Error('Actor not available');
-
-      const categoryKeys: CategoryKey[] = [
-        'overall', 'spearMace', 'vanilla', 'uhc', 'diamondSmp', 'spear',
-        'nethop', 'smp', 'sword', 'axe', 'mace',
-      ];
-
-      // Find which categories this player has badges for
-      const badgeCategories = player.badges
-        .map((b) => b.category)
-        .filter((c) => categoryKeys.includes(c as CategoryKey));
-
-      if (badgeCategories.length > 0) {
-        // Add player to each category they have a badge for
-        for (const cat of badgeCategories) {
-          await actor.addPlayer(cat, player);
-        }
-      } else {
-        // Default to overall if no badges
-        await actor.addPlayer('overall', player);
-      }
+      await actor.addPlayer(category, player);
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      // Invalidate the specific category that was added to
+      queryClient.invalidateQueries({ queryKey: ['playersByCategory', variables.category] });
+      // Also invalidate allPlayers and rawRankingData for completeness
       queryClient.invalidateQueries({ queryKey: ['allPlayers'] });
       queryClient.invalidateQueries({ queryKey: ['rawRankingData'] });
-      queryClient.invalidateQueries({ queryKey: ['playersByCategory'] });
     },
   });
 }
@@ -115,9 +117,12 @@ export function useRemovePlayer() {
       await actor.removePlayer(uuid);
     },
     onSuccess: () => {
+      // Invalidate all category queries since removePlayer removes from ALL categories
+      ALL_CATEGORY_KEYS.forEach((key) => {
+        queryClient.invalidateQueries({ queryKey: ['playersByCategory', key] });
+      });
       queryClient.invalidateQueries({ queryKey: ['allPlayers'] });
       queryClient.invalidateQueries({ queryKey: ['rawRankingData'] });
-      queryClient.invalidateQueries({ queryKey: ['playersByCategory'] });
     },
   });
 }

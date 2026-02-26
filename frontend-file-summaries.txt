@@ -1,17 +1,17 @@
 {
   "frontend/src/App.tsx": "Root app component that renders the RankingsPage as the main view.",
-  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations; adds `useRemovePlayer` mutation that calls `actor.removePlayer(uuid)` and invalidates all player/ranking caches on success; also fixes `useAddPlayer` argument order to match the backend interface (`addPlayer(rankingCategory, player)`).",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations; `useRemovePlayer` now explicitly invalidates all 11 category query keys on success, and `useAddPlayer` invalidates the specific category key that was added to, ensuring immediate table refresh.",
   "frontend/src/data/mockData.ts": "Exports `CategoryKey` union type with 11 categories (replacing `nethopSpear` with `spear`), an empty `mockPlayerData` array, and an empty `MOCK_DATA` record keyed by `CategoryKey`.",
   "frontend/src/components/TierBadge.tsx": "Compact circular tier badge component with SVG category icons and color-coded tier labels; `nethopSpear` key replaced by `spear` with the same distinct pink/magenta color scheme preserved.",
   "frontend/src/components/PlayerRow.tsx": "Individual player row with gold/silver/bronze rank backgrounds, crafatar.com avatar, username, title/points, region pill badge, and tier badges.",
   "frontend/src/components/RankingsTable.tsx": "Rankings table with header row, loading skeletons, empty state, and filtered player rows based on search query.",
   "frontend/src/components/CategoryTabs.tsx": "Horizontal scrollable tab bar with 11 category tabs; `nethopSpear` replaced by `spear` with label \"Spear\" and the same pink spear SVG icon, renamed icon component from `NethopSpearIcon` to `SpearIcon`.",
   "frontend/src/components/SearchInput.tsx": "Search input with magnifier icon, clear button, and keyboard shortcut hint styled for the dark MC theme.",
-  "frontend/src/pages/RankingsPage.tsx": "Main rankings page that fetches live player data, filters by active category (treating `diamondSmp` and `spear` as special backend-stored categories), sorts by points, and renders the ranked table.",
+  "frontend/src/pages/RankingsPage.tsx": "Main rankings page that now uses `useGetPlayersByCategory(activeCategory)` exclusively for all categories, simplifying the data flow and ensuring add/remove operations immediately reflect in the table via cache invalidation.",
   "frontend/src/index.css": "Global dark Minecraft-inspired theme with OKLCH color tokens, Press Start 2P font import, pixelated image utility, rank gradient utilities, and scrollbar-hide helper.",
   "frontend/tailwind.config.js": "Extended Tailwind config with mc.* color palette (dark navy/charcoal backgrounds, gold accents, tier badge colors), pixel font family, and MC-specific shadow tokens.",
   "frontend/src/components/PasscodeModal.tsx": "Modal dialog that prompts the user to enter the admin passcode (65515616151); shows an error on incorrect entry and calls onSuccess when the correct code is submitted.",
-  "frontend/src/components/AdminControls.tsx": "Admin controls with Add Player and Remove Player buttons; Remove Player now opens a self-contained dialog listing all current players (deduplicated by UUID with Crafatar avatars), lets the admin select one, and calls `useRemovePlayer` to delete them from all rankings — no `onRemovePlayer` prop needed; passcode gate and sessionStorage unlock state unchanged.",
+  "frontend/src/components/AdminControls.tsx": "Admin controls component that now accepts an `activeCategory` prop and forwards it to `AddPlayerModal` as `defaultCategory` so the form pre-selects the current tab's category.",
   "frontend/src/main.tsx": "App entry point that wraps the app with QueryClientProvider only; InternetIdentityProvider has been removed.",
-  "frontend/src/components/AddPlayerModal.tsx": "Dark-themed modal for adding a new player; game mode list updated to use `spear` (\"Spear\") instead of `nethopSpear` (\"Nethop Spear\"), with all form state and submission logic referencing the new key."
+  "frontend/src/components/AddPlayerModal.tsx": "Dark-themed modal for adding a new player; now includes a required Category dropdown (defaulting to the active category via `defaultCategory` prop) and passes `{ category, player }` to the `useAddPlayer` mutation."
 }

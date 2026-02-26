@@ -1,75 +1,98 @@
 {
   "kind": "build_request",
-  "title": "Fix Remove Player functionality",
+  "title": "Fix Add/Remove Player flows and allow clearing individual tier badges",
   "projectName": "Muti Tiers",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-21",
-      "text": "Add a `removePlayer` update method to the backend Motoko actor in backend/main.mo that accepts a player UUID (Text) and removes the matching player record from all category stable storage arrays. The method must not perform any caller identity or admin authorization check — it must accept and process any valid call.",
+      "id": "REQ-27",
+      "text": "In AddPlayerModal.tsx, make every per-category tier badge input field optional and clearable: each of the 11 tier fields (Overall, Spear Mace, Vanilla, UHC, Diamond SMP, NethOP, SMP, Sword, Axe, Mace, Spear) must accept an empty string as valid input, and the form must submit successfully even when one or more tier fields are left blank or cleared. Do not require all tier fields to be filled.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "make it so i can remove one tier or more"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Each tier badge input field in AddPlayerModal can be individually cleared (set to empty string).",
+        "The form submits without error when one or more tier fields are empty.",
+        "Only non-empty tier badge values are included in the payload sent to the backend addPlayer method.",
+        "Tier badges that were left empty do not appear in the player's row in the rankings table."
+      ]
+    },
+    {
+      "id": "REQ-28",
+      "text": "Update the backend addPlayer method in backend/main.mo to treat tier badge entries with empty labels as absent — skip storing any tier badge record where the tier label is an empty string or whitespace. This ensures partial tier badge submissions from the frontend are stored correctly without empty badge artifacts.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "remove player is not working"
+          "make it so i can remove one tier or more"
         ]
       },
       "acceptanceCriteria": [
-        "A `removePlayer(uuid: Text)` update method exists in backend/main.mo",
-        "The method removes the player with the matching UUID from every category stable array (overall, spearMace, vanilla, uhc, diamondSmp, nethop, smp, sword, axe, mace, spear)",
-        "No authorization or caller identity check blocks the call",
-        "Calling removePlayer with a UUID that does not exist is a no-op and does not throw an error"
+        "The addPlayer method accepts a player payload with fewer than 11 tier badges without error.",
+        "Tier badge entries with empty or whitespace-only labels are not persisted to stable storage.",
+        "A player added with only some tier badges set has those badges displayed correctly and no empty badge artifacts appear."
       ]
     },
     {
-      "id": "REQ-22",
-      "text": "Add a `useRemovePlayer` mutation hook in frontend/src/hooks/useQueries.ts that calls the backend `removePlayer` method with the selected player's UUID and invalidates the relevant React Query cache keys on success.",
-      "target": "frontend",
+      "id": "REQ-29",
+      "text": "Perform a thorough end-to-end audit and fix of the Add Player flow: (1) Confirm the backend addPlayer method in backend/main.mo has no admin authorization guard and accepts any valid call unconditionally. (2) Confirm useAddPlayer in useQueries.ts constructs the correct argument shape (including only non-empty tier badges) and calls the backend actor method. (3) Confirm AddPlayerModal.tsx serialises the form state into the exact shape the backend expects and closes the modal on success. (4) Confirm React Query cache is invalidated for all relevant category keys after a successful add so the rankings table refreshes immediately.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "remove player is not working"
+          "its still not working"
         ]
       },
       "acceptanceCriteria": [
-        "A `useRemovePlayer` hook is exported from useQueries.ts",
-        "The hook calls the backend actor's `removePlayer` method with the target player UUID",
-        "On success, the query cache for all category rankings is invalidated so the table re-fetches and reflects the removal"
+        "Submitting the Add Player form with valid data persists the player to the backend and the player appears in the rankings table without a page reload.",
+        "No 'Unauthorized' or other backend error is returned when addPlayer is called from the frontend.",
+        "The modal closes automatically after a successful submission.",
+        "Backend errors are displayed inline in the modal rather than failing silently.",
+        "The rankings table for the relevant category refreshes immediately after the player is added."
       ]
     },
     {
-      "id": "REQ-23",
-      "text": "Fix the Remove Player flow in frontend/src/components/AdminControls.tsx so that: (1) when the Remove Player button is clicked and the session is unlocked (passcode already entered this session via sessionStorage), the user is prompted to select or confirm which player to remove without re-showing the PasscodeModal; (2) if the session is not yet unlocked, the PasscodeModal is shown first; (3) once confirmed, the `useRemovePlayer` mutation is called with the target player's UUID and the player disappears from the rankings table immediately.",
-      "target": "frontend",
+      "id": "REQ-30",
+      "text": "Perform a thorough end-to-end audit and fix of the Remove Player flow: (1) Confirm the backend removePlayer method in backend/main.mo removes the player matching the given UUID from all category stable storage arrays without any authorization check. (2) Confirm useRemovePlayer in useQueries.ts calls the backend removePlayer method with the correct UUID argument and invalidates all relevant React Query cache keys on success. (3) Confirm AdminControls.tsx: when session is already unlocked (sessionStorage flag set), the Remove Player button immediately shows a player-selection/confirmation step without re-prompting the PasscodeModal; if not unlocked, shows PasscodeModal first. (4) After confirmation, the player disappears from the rankings table immediately.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "remove player is not working"
+          "its still not working"
         ]
       },
       "acceptanceCriteria": [
-        "Clicking Remove Player when already unlocked does not re-prompt the PasscodeModal",
-        "Clicking Remove Player when not yet unlocked shows the PasscodeModal first, then proceeds after correct passcode entry",
-        "The selected player is removed from the rankings table after the mutation completes",
-        "The unlocked state is read from sessionStorage (key consistent with AdminControls existing implementation) so it persists across re-renders within the same session"
+        "Clicking Remove Player when the session is unlocked shows a player selection or confirmation UI without showing the PasscodeModal again.",
+        "Clicking Remove Player when the session is NOT unlocked shows the PasscodeModal first, then proceeds to the remove confirmation after correct passcode entry.",
+        "After confirming removal, the selected player is deleted from the backend stable storage across all categories.",
+        "The rankings table refreshes immediately after removal without a page reload.",
+        "No authorization error is returned from the backend removePlayer method."
       ]
     }
   ],
   "constraints": [
-    "Do not add any backend-level caller identity or admin authorization checks to removePlayer",
-    "Passcode gate (65515616151) must remain exclusively on the frontend in AdminControls.tsx and PasscodeModal.tsx",
-    "Do not modify any file listed in frontend.immutablePaths"
+    "Do not add any backend-level admin authorization checks to addPlayer or removePlayer — all access control remains on the frontend via the passcode gate.",
+    "Do not modify files listed in frontend.immutablePaths.",
+    "Passcode value 65515616151 must remain the only gate for admin actions; no Internet Identity or wallet auth.",
+    "The session unlock state must be stored in sessionStorage so it persists across re-renders but resets on tab close or page refresh."
   ],
   "nonGoals": [
-    "Changing the Add Player flow or PasscodeModal logic",
-    "Modifying category tab labels or keys",
-    "Any UI redesign beyond the Remove Player interaction"
+    "Adding new category tabs or renaming existing ones.",
+    "Changing the visual theme or layout.",
+    "Implementing backend-level role-based access control.",
+    "Adding an edit player feature (only add and remove are in scope)."
   ],
   "imageRequirements": {
     "required": [],
